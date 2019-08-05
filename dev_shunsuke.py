@@ -7,7 +7,7 @@ DATABASES = {
 
        'default': {
        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-       'NAME': 'gradedb',
+       'NAME': 'tminnovation',
        'USER': 'shunsuke',
        'PASSWORD': 'shun0210',
        'HOST': '127.0.0.1',
@@ -25,3 +25,4 @@ DATABASES = {
     }
 }
 """
+ALLOWED_HOSTS = ['127.0.0.1']
