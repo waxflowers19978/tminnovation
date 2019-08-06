@@ -5,10 +5,7 @@ from django.utils import timezone
 
 # Create your models here.
 
-#create table tramino_teaminformation(id serial NOT NULL PRIMARY KEY, organization_name varchar(30) NOT NULL, club_name varchar(30) NOT NULL, sex varchar(30) NOT NULL, school_attribute varchar(30) NOT NULL, prefectures_name varchar(30) NOT NULL, city_name varchar(50), activity_place varchar(30) NOT NULL, url varchar(200), achievement varchar(30), practice_frequency varchar(30), number_of_members varchar(30), commander_name varchar(30) NOT NULL, commander_career varchar(30), commander_introduction varchar(30), created_at date);
-
-
-
+#create table tramino_teaminformations(id serial NOT NULL PRIMARY KEY, organization_name varchar(30) NOT NULL, club_name varchar(30) NOT NULL, sex varchar(30) NOT NULL, school_attribute varchar(30) NOT NULL, prefectures_name varchar(30) NOT NULL, city_name varchar(50), activity_place varchar(30) NOT NULL, url varchar(200), achievement varchar(30), practice_frequency varchar(30), number_of_members varchar(30), commander_name varchar(30) NOT NULL, commander_career varchar(30), commander_introduction varchar(30), created_at date);
 
 class TeamInformations(models.Model):
 
@@ -46,7 +43,6 @@ class TeamInformations(models.Model):
         created_at = created_at + datetime.timedelta(hours=9)
         return created_at.strftime('%Y/%m/%d %H:%M')+ self.organization_name+self.club_name
 
-
 class EventPostPool(models.Model):
     event_host_team = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='event_posts')
     event_name = models.CharField(max_length = 50)
@@ -56,13 +52,11 @@ class EventPostPool(models.Model):
     apply_deadline = models.DateField('date published')
     created_at = models.DateTimeField(auto_now=True)
 
-
 class EventApplyPool(models.Model):
     event_post_id = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='event_applies')
     guest_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='event_applies')
     created_at = models.DateTimeField(auto_now=True)
     
-
 class FavoriteEventPool(models.Model):
     event_post_id = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='event_favorites')
     guest_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='event_favorites')
@@ -73,7 +67,6 @@ class FavoriteTeamPool(models.Model):
     guest_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='favorite_recipient_team')
     created_at = models.DateTimeField(auto_now=True)
 
-    
 class PastGameRecords(models.Model):
     game_category_list = [['練習試合','練習試合'],['公式戦','公式戦']]
     score_list = [['0','0'],['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6'],['7','7'],['8','8'],['9','9'],['10','10'],['11~','11~']]
