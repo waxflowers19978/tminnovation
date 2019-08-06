@@ -5,6 +5,7 @@ from . import views
 
 app_name = 'tramino'
 urlpatterns = [
+    path('hp/', views.hp, name = 'hp'),
     path('index/', views.index, name = 'index'),
     path('mypage/', views.mypage, name='mypage'),
     path('match_search/', views.match_search, name='match_search'),
