@@ -1,0 +1,23 @@
+<table>
+<thead>
+<tr>
+    <th>チームID</th>
+    <!-- <th>コード</th> -->
+    <th>学校名</th>
+    <th>部活名</th>
+</tr>
+</thead>
+<tbody>
+{% for message in all_team_info %}
+<tr>
+    <td>
+        <input type="hidden" name="sub-name" value="{{message.0}}">
+        {{message.0}}
+    </td>
+    <!-- <td>{{ message.1 }}</td> -->
+    <td>{{ message.1 }}人</td>
+    <td>{{ message.2 }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
