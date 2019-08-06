@@ -1,3 +1,4 @@
+###################################DBすべてのチーム情報
 <table>
 <thead>
 <tr>
@@ -10,14 +11,34 @@
 <tbody>
 {% for message in all_team_info %}
 <tr>
-    <td>
-        <input type="hidden" name="sub-name" value="{{message.0}}">
-        {{message.0}}
-    </td>
-    <!-- <td>{{ message.1 }}</td> -->
-    <td>{{ message.1 }}人</td>
+    <td>{{ message.0 }}</td>
+    <td>{{ message.1 }}</td>
     <td>{{ message.2 }}</td>
 </tr>
 {% endfor %}
 </tbody>
 </table>
+
+<br>
+<br>
+###################################DBすべてのイベント情報
+<table>
+<thead>
+<tr>
+    <th>イベント投稿ID</th>
+    <!-- <th>コード</th> -->
+    <th>ホストチームID</th>
+    <th>イベント題名</th>
+</tr>
+</thead>
+<tbody>
+{% for message in all_event_info %}
+<tr>
+    <td>{{ message.0 }}</td>
+    <td>{{ message.1 }}</td>
+    <td>{{ message.2 }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
