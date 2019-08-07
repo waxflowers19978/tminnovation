@@ -18,3 +18,4 @@ html5lib
 pandas-datareader==0.6.0
 django-widget-tweaks==1.4.3
 Pillow==5.4.1
+django-heroku==0.3.1   
