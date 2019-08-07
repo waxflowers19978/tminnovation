@@ -27,7 +27,7 @@ MEDIA_URL = '/media/'
 SECRET_KEY = 'z6x-p23!lbi5o+v%tt3bd4_nn-@!!u*sj8njcmww9v+v&e04%v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 ALLOWED_HOSTS = ['.herokuapp.com']
 
@@ -142,22 +142,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
 
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ##############################
 
 import dj_database_url
 DATABASES['default'] = dj_database_url.config()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
 
 
-STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+# STATIC_URL = '/static/'
+STATIC_URL = STATIC_ROOT
 
 DEBUG = False
 
