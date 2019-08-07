@@ -154,7 +154,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "/static/")
 # STATIC_URL = '/static/'
 STATIC_URL = STATIC_ROOT
 
