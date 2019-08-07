@@ -158,6 +158,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'), # サーバでcssを読み込むためのパス
 )
 
+
 DEBUG = False
 
 try:
