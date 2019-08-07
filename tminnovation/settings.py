@@ -160,7 +160,7 @@ ALLOWED_HOSTS = ['*']
 
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'), # サーバでcssを読み込むためのパス
+    os.path.join(BASE_DIR, 'tramino/static'), # サーバでcssを読み込むためのパス
 )
 
 STATIC_URL = '/static/'
