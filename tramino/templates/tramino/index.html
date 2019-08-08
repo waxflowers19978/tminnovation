@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head lang="ja">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-This page is index.
-</body>
-</html>
+{% extends 'tramino/base.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+  <h1>login or signup</h1>
+  <br>
+  <p><a href="{% url 'tramino:login' %}">ログイン</a></p>
+  <p><a href="{% url 'tramino:create' %}">サインアップ</a></p>
+{% endblock %}

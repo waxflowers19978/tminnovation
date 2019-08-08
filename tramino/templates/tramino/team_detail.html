@@ -1,10 +1,81 @@
-<!DOCTYPE html>
-<html>
-<head lang="ja">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-This page is team_detail.
-</body>
-</html>
+{% extends 'tramino/base.html' %}
+
+{% block content %}
+  <h1>チームの詳細</h1>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>チームID</th>
+        <td>{{team.id}}</td>
+      </tr>
+      <tr>
+        <th>学校名</th>
+        <td>{{team.organization_name}}</td>
+      </tr>
+      <tr>
+        <th>部活名</th>
+        <td>{{team.club_name}}</td>
+      </tr>
+      <tr>
+        <th>性別</th>
+        <td>{{team.sex}}</td>
+      </tr>
+      <tr>
+        <th>学校の属性</th>
+        <td>{{team.school_attribute}}</td>
+      </tr>
+      <tr>
+        <th>都道府県</th>
+        <td>{{team.prefectures_name}}</td>
+      </tr>
+      <tr>
+        <th>市区町村</th>
+        <td>{{team.city_name}}</td>
+      </tr>
+      <tr>
+        <th>活動場所</th>
+        <td>{{team.activity_place}}</td>
+      </tr>
+      <tr>
+        <th>チームの写真</th>
+        <!-- <td>{{team.team_picture}}</td> -->
+        <td><img src="{{ team.team_picture.url }}" width="100" height="100"/></td>
+      </tr>
+      <tr>
+        <th>URL</th>
+        <td>{{team.url}}</td>
+      </tr>
+      <tr>
+        <th>成績</th>
+        <td>{{team.achievement}}</td>
+      </tr>
+      <tr>
+        <th>活動頻度</th>
+        <td>{{team.practice_frequency}}</td>
+      </tr>
+      <tr>
+        <th>人数</th>
+        <td>{{team.number_of_members}}</td>
+      </tr>
+      <tr>
+        <th>顧問</th>
+        <td>{{team.commander_name}}</td>
+      </tr>
+      <tr>
+        <th>顧問のキャリア</th>
+        <td>{{team.commander_career}}</td>
+      </tr>
+      <tr>
+        <th>顧問の写真</th>
+        <!-- <td>{{team.commander_picture}}</td> -->
+        <td><img src="{{ team.commander_picture.url }}" width="100" height="100"/></td>
+      </tr>
+      <tr>
+        <th>顧問の紹介</th>
+        <td>{{team.commander_introduction}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br><br>
+  <p><a href="{% url 'tramino:team_search' %}">チームを探す</a></p>
+{% endblock %}

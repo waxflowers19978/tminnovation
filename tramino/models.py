@@ -2,6 +2,15 @@ from django.db import models
 import datetime
 from django.utils import timezone
 
+import uuid
+
+"""
+画像の保存path名を一意に設定
+"""
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    name = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('team/team/', name)
 
 # Create your models here.
 
@@ -23,7 +32,7 @@ class TeamInformations(models.Model):
     prefectures_name = models.CharField(max_length = 30, choices=prefectures_list)
     city_name = models.CharField(max_length = 50, null=True, blank=True)
     activity_place = models.CharField(max_length = 30)
-    team_picture = models.ImageField(upload_to="image/", default='SOME STRING')
+    team_picture = models.ImageField(upload_to="team/team/", default='SOME STRING')
     url = models.CharField(max_length = 200, null=True, blank=True)
     achievement = models.CharField(max_length = 30, null=True, blank=True)
     practice_frequency = models.CharField(max_length = 30, choices=practice_frequency_list, null=True, blank=True)
@@ -33,21 +42,23 @@ class TeamInformations(models.Model):
     commander_name = models.CharField(max_length = 30)
     #position = models.CharField(max_length = 30)
     commander_career = models.CharField(max_length = 400, null=True, blank=True)
-    commander_picture = models.ImageField(upload_to="image/", default='SOME STRING')
+    commander_picture = models.ImageField(upload_to="team/commander/", default='SOME STRING')
     commander_introduction = models.CharField(max_length = 2000, null=True, blank=True)
 
     #created_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now=True)
     def __str__(self):
-        created_at = self.created_at
-        created_at = created_at + datetime.timedelta(hours=9)
-        return created_at.strftime('%Y/%m/%d %H:%M')+ self.organization_name+self.club_name
+        # created_at = self.created_at
+        # created_at = created_at + datetime.timedelta(hours=9)
+        # return created_at.strftime('%Y/%m/%d %H:%M')+ self.organization_name+self.club_name
+        return self.organization_name
 
 class EventPostPool(models.Model):
     event_host_team = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='event_posts')
     event_name = models.CharField(max_length = 50)
     event_description = models.CharField(max_length = 300)
-    event_picture = models.ImageField(upload_to="image/", default='SOME STRING')
+    event_picture = models.ImageField(upload_to="event/", default='SOME STRING', null=True, blank=True)
+    # event_picture = models.ImageField(upload_to="event/", null=True, blank=True)
     event_date = models.DateField('date published')
     apply_deadline = models.DateField('date published')
     created_at = models.DateTimeField(auto_now=True)
@@ -56,7 +67,7 @@ class EventApplyPool(models.Model):
     event_post_id = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='event_applies')
     guest_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='event_applies')
     created_at = models.DateTimeField(auto_now=True)
-    
+
 class FavoriteEventPool(models.Model):
     event_post_id = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='event_favorites')
     guest_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='event_favorites')
@@ -70,10 +81,10 @@ class FavoriteTeamPool(models.Model):
 class PastGameRecords(models.Model):
     game_category_list = [['練習試合','練習試合'],['公式戦','公式戦']]
     score_list = [['0','0'],['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6'],['7','7'],['8','8'],['9','9'],['10','10'],['11~','11~']]
-    
+
     register_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='past_game_records')
     opponent_team_name = models.CharField(max_length = 50)
-    game_category = models.CharField(max_length = 30, choices=game_category_list) 
+    game_category = models.CharField(max_length = 30, choices=game_category_list)
     my_score = models.CharField(max_length = 30, choices=score_list)
     opponent_score = models.CharField(max_length = 30, choices=score_list)
     game_date = models.DateField('date published')

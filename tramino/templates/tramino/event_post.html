@@ -1,177 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head lang="ja">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-This page is event_post.
-</body>
+{% extends 'tramino/base.html' %}
+{% load static %}
 
-<br>
-<br>
-##################################
-<div>DBすべてのチーム情報</div>
-<table>
-  <thead>
-  <tr>
-    <th>チームID</th>
-    <th>学校名</th>
-    <th>部活</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for message in all_team_info %}
-  <tr>
-    <td>
-        <input type="hidden" name="sub-name" value="{{message.0}}">
-        {{message.0}}
-    </td>
-    <td>{{ message.1 }}</td>
-    <td>{{ message.2 }}</td>
-  </tr>
-  {% endfor %}
-  </tbody>
-</table>
+{% block css %}
 
-<br>
-<br>
-##################################
-<div>DBすべての募集投稿情報</div>
-<table>
-<thead>
-<tr>
-    <th>外部キーのチームID</th>
-    <th>イベント名</th>
-    <th>試合日程</th>
-    <th>募集期限</th>
-    
-</tr>
-</thead>
-<tbody>
-{% for message in all_event_info %}
-<tr>
-    <td>
-        <input type="hidden" name="sub-name" value="{{message.0}}">
-        {{message.1}}
-    </td>
-    <td>{{ message.2 }}</td>
-    <td>{{ message.4 }}</td>
-    <td>{{ message.5 }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
+{% endblock %}
 
-
-<br>
-<br>
-##################################
-<div>DBすべての気になる募集情報</div>
-<table>
-<thead>
-<tr>
-    <th>外部キーの投稿ID</th>
-    <th>気になるの送り手チーム名</th>
-    
-</tr>
-</thead>
-<tbody>
-{% for message in all_favorite_event %}
-<tr>
-    <td>
-        <input type="hidden" name="sub-name" value="{{message.0}}">
-        {{message.1}}
-    </td>
-    <td>{{ message.2 }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-<br>
-<br>
-##################################
-<div>DBすべての応募情報</div>
-<table>
-<thead>
-<tr>
-    <th>外部キーの投稿ID</th>
-    <th>応募の送り手チーム名</th>
-    
-</tr>
-</thead>
-<tbody>
-{% for message in all_event_applies %}
-<tr>
-    <td>
-        <input type="hidden" name="sub-name" value="{{message.0}}">
-        {{message.1}}
-    </td>
-    <td>{{ message.2 }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-<br>
-<br>
-##################################
-<div>DBすべての気になるチーム情報</div>
-<table>
-<thead>
-<tr>
-    <th>外部キーのチームID</th>
-    <th>応募の送り手チームID</th>
-    
-</tr>
-</thead>
-<tbody>
-{% for message in all_favorite_team %}
-<tr>
-    <td>
-        <input type="hidden" name="sub-name" value="{{message.0}}">
-        {{message.1}}
-    </td>
-    <td>{{ message.2 }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-<br>
-<br>
-##################################
-<div>DBすべての登録ゲーム記録</div>
-<table>
-<thead>
-<tr>
-    <th>外部キーのチームID</th>
-    <th>対戦相手校</th>
-    <th>ゲームの種類</th>
-    <th>当校のスコア</th>
-    <th>対戦相手のスコア</th>
-    <th>ゲームの実施日</th>
-    
-</tr>
-</thead>
-<tbody>
-{% for message in all_favorite_team %}
-<tr>
-    <td>
-        <input type="hidden" name="sub-name" value="{{message.0}}">
-        {{message.1}}
-    </td>
-    <td>{{ message.2 }}</td>
-    <td>{{ message.3 }}</td>
-    <td>{{ message.4 }}</td>
-    <td>{{ message.5 }}</td>
-    <td>{{ message.6 }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-
-
-
-</html>
+{% block content %}
+  <h1>イベント投稿</h1>
+  <table class="table">
+    <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data"> 
+    <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
+    {% csrf_token %}
+    <tbody>
+      <tr>
+        <th>主催の学校※</th>
+        <td>{{ form.event_host_team }}</td>
+      </tr>
+      <tr>
+        <th>イベント名※</th>
+        <td>{{ form.event_name }}</td>
+      </tr>
+      <tr>
+        <th>イベントについて※</th>
+        <td>{{ form.event_description }}</td>
+      </tr>
+      <tr>
+        <th>イベントの画像※</th>
+        <td>{{ form.event_picture }}</td>
+      </tr>
+      <tr>
+        <th>イベントの日付※</th>
+        <td>{{ form.event_date }}</td>
+      </tr>
+      <tr>
+        <th>申し込み期限※</th>
+        <td>{{ form.apply_deadline }}</td>
+      </tr>
+      <tr>
+        <th><input class="btn btn-primary" type="submit" value="Submit"></th>
+        <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+      </tr>
+    </tbody>
+    <input type="hidden" name="page_name" value="event_post">
+    </form>
+  </table>
+{% endblock %}

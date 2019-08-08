@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tramino',
     'gunicorn',
+    'django_cleanup',
 ]
 
 MIDDLEWARE = [
@@ -160,7 +161,9 @@ STATIC_URL = STATIC_ROOT
 
 DEBUG = False
 
+
 try:
-    from .local_settings import *
+    import local_settings
+    DEBUG = True
 except ImportError:
     pass

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>tramino</title>
+    {% block css %}{% endblock %}
+</head>
+
+<body>
+  <!-- <p><a href="{% url 'tramino:create' %}">create</a></p> -->
+  <p><a href="{% url 'tramino:mypage' %}">マイページ</a></p>
+  {% block content %}{% endblock %}
+</body>
+</html>
