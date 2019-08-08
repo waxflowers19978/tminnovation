@@ -7,7 +7,10 @@
 
 <body>
   <!-- <p><a href="{% url 'tramino:create' %}">create</a></p> -->
-  <p><a href="{% url 'tramino:mypage' %}">マイページ</a></p>
+  <a href="{% url 'tramino:mypage' %}">マイページ</a>
+  <a href="{% url 'logout' %}">ログアウト</a>
+  <p>logged in as {{ username }}</p>
+  <hr>
   {% block content %}{% endblock %}
 </body>
 </html>

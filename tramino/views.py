@@ -2,55 +2,28 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords
 from .forms import TeamInformationsForm, EventPostPoolForm
 
-
+"""
+python code in python_file
+"""
 from .python_file.model_form_save import *
 
 # Create your views here.
 
 
 
-
-
-def hp(request):
-    team_list = list(TeamInformations.objects.values_list('organization_name', flat=True))
-    team_detail_info = TeamInformations.objects.values_list('organization_name', flat=True)
-    all_team_info = TeamInformations.objects.all()
-    all_team_info = all_team_info.values_list()
-
-    all_event_info = EventPostPool.objects.all().values_list()
-    all_event_applies = EventApplyPool.objects.all().values_list()
-    all_favorite_event = FavoriteEventPool.objects.all().values_list()
-    all_favorite_team = FavoriteTeamPool.objects.all().values_list()
-    all_past_game_records = PastGameRecords.objects.all().values_list()
-
-
-
-    #できたばかりの人工芝グラウンドで練習試合をしませんか？
-    #当校のグラウンドは、2017年に人工芝グラウンドになったばかりです。広さは縦105メートル、横60メートルと広大で、ウォーミングアップ用のコートも併設してあります。ぜひ当校のグラウンドのお越しください。
-
-
-    params={
-        'all_team_info':all_team_info,
-        'all_event_info':all_event_info,
-        'all_event_applies':all_event_applies,
-        'all_favorite_event':all_favorite_event,
-        'all_favorite_team':all_favorite_team,
-        'all_past_game_records':all_past_game_records,
-
-    }
-    return render(request, 'tramino/hp.html',params)
-
 def index(request):
     return render(request, 'tramino/index.html')
 
+@login_required
 def mypage(request):
     if request.method == 'POST':
-
         form = TeamInformationsForm(request.POST, request.FILES)
         if form.is_valid():
             teamInfoSave()
@@ -73,47 +46,64 @@ def mypage(request):
             team.commander_introduction = form.cleaned_data['commander_introduction']
             team.save()
         return render(request, 'tramino/mypage.html')
-    return render(request, 'tramino/mypage.html')
+    username = request.user.username
+    params = {
+        'username': username,
+    }
+    return render(request, 'tramino/mypage.html', params)
 
+@login_required
 def match_search(request):
+    username = request.user.username
     event_post_pool = EventPostPool.objects.all()
     params = {
         'events': event_post_pool,
+        'username': username,
     }
     return render(request, 'tramino/match_search.html', params)
 
 # def match_detail(request):
 #     return render(request, 'tramino/match_detail.html')
+@login_required
 def match_detail(request, event_id):
+    username = request.user.username
     match  = EventPostPool.objects.get(id=event_id)
     params = {
         'match': match,
+        'username': username,
     }
     return render(request, 'tramino/match_detail.html', params)
 
+@login_required
 def event_post(request):
+    username = request.user.username
     form = EventPostPoolForm()
     params = {
     'form': form,
+    'username': username,
     }
     return render(request, 'tramino/event_post.html', params)
 
+@login_required
 def team_search(request):
+    username = request.user.username
     team_informations = TeamInformations.objects.all()
     params = {
         'teams': team_informations,
+        'username': username,
     }
     return render(request, 'tramino/team_search.html', params)
 
+@login_required
 def team_detail(request, team_id):
+    username = request.user.username
     team  = TeamInformations.objects.get(id=team_id)
     params = {
         'team': team,
+        'username': username,
     }
     return render(request, 'tramino/team_detail.html', params)
 
-def login(request):
-    return render(request, 'tramino/login.html')
 
 def create(request):
     form = TeamInformationsForm()
@@ -122,7 +112,7 @@ def create(request):
     }
     return render(request, 'tramino/create.html', params)
 
-
+@login_required
 def done(request):
     if request.method == 'POST':
         if request.POST['page_name'] == 'event_post':
@@ -144,9 +134,5 @@ def done(request):
         }
         return render(request, 'tramino/done.html', params)
 
-    # return redirect('mypage')
-    params = {
-        'message': 'why???'
-    }
-    # return render(request, 'tramino/done.html', params)
+
     return redirect('tramino:mypage')

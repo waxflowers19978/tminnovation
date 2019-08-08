@@ -19,6 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# ログイン後トップページにリダイレクト
+LOGIN_REDIRECT_URL = '/tramino/mypage'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'tramino',
     'gunicorn',
     'django_cleanup',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [

@@ -8,6 +8,6 @@
 {% block content %}
   <h1>login or signup</h1>
   <br>
-  <p><a href="{% url 'tramino:login' %}">ログイン</a></p>
-  <p><a href="{% url 'tramino:create' %}">サインアップ</a></p>
+  <p><a href="{% url 'login' %}">ログイン</a></p>
+  <p><a href="{% url 'accounts:signup' %}">サインアップ</a></p>
 {% endblock %}
