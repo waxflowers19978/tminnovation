@@ -126,7 +126,6 @@ def done(request):
                 event.apply_deadline = form.cleaned_data['apply_deadline']
                 event.save()
             message = 'イベントの募集を投稿しました。'
-
         params = {
             'message': message,
         }

@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+
 """
 ローカルで画像を表示するpathを追加
 """
