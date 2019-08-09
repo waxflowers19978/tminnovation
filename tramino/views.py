@@ -2,7 +2,6 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 
@@ -21,7 +20,6 @@ from .python_file.model_form_save import *
 def index(request):
     return render(request, 'tramino/index.html')
 
-@login_required
 def mypage(request):
     if request.method == 'POST':
         form = TeamInformationsForm(request.POST, request.FILES)
@@ -52,7 +50,7 @@ def mypage(request):
     }
     return render(request, 'tramino/mypage.html', params)
 
-@login_required
+
 def match_search(request):
     username = request.user.username
     event_post_pool = EventPostPool.objects.all()
@@ -64,7 +62,7 @@ def match_search(request):
 
 # def match_detail(request):
 #     return render(request, 'tramino/match_detail.html')
-@login_required
+
 def match_detail(request, event_id):
     username = request.user.username
     match  = EventPostPool.objects.get(id=event_id)
@@ -74,7 +72,7 @@ def match_detail(request, event_id):
     }
     return render(request, 'tramino/match_detail.html', params)
 
-@login_required
+
 def event_post(request):
     username = request.user.username
     form = EventPostPoolForm()
@@ -84,7 +82,7 @@ def event_post(request):
     }
     return render(request, 'tramino/event_post.html', params)
 
-@login_required
+
 def team_search(request):
     username = request.user.username
     team_informations = TeamInformations.objects.all()
@@ -94,7 +92,7 @@ def team_search(request):
     }
     return render(request, 'tramino/team_search.html', params)
 
-@login_required
+
 def team_detail(request, team_id):
     username = request.user.username
     team  = TeamInformations.objects.get(id=team_id)
@@ -112,7 +110,7 @@ def create(request):
     }
     return render(request, 'tramino/create.html', params)
 
-@login_required
+
 def done(request):
     if request.method == 'POST':
         if request.POST['page_name'] == 'event_post':

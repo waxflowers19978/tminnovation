@@ -22,8 +22,6 @@ from django.conf.urls import url, include
 urlpatterns = [
     path('tramino/', include('tramino.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/', include('accounts.urls')),
 ]
 
 """

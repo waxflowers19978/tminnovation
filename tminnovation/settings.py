@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+AUTH_USER_MODEL = 'tramino.User'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -46,7 +47,6 @@ INSTALLED_APPS = [
     'tramino',
     'gunicorn',
     'django_cleanup',
-    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
