@@ -28,37 +28,39 @@ def get_event(self, filename):
 
 #create table tramino_teaminformations(id serial NOT NULL PRIMARY KEY, organization_name varchar(30) NOT NULL, club_name varchar(30) NOT NULL, sex varchar(30) NOT NULL, school_attribute varchar(30) NOT NULL, prefectures_name varchar(30) NOT NULL, city_name varchar(50), activity_place varchar(30) NOT NULL, url varchar(200), achievement varchar(30), practice_frequency varchar(30), number_of_members varchar(30), commander_name varchar(30) NOT NULL, commander_career varchar(30), commander_introduction varchar(30), created_at date);
 
-
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
+from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
 
+
 class UserManager(BaseUserManager):
+    """ユーザーマネージャー."""
+
     use_in_migrations = True
 
-    def _create_user(self, username, email, password, **extra_fields):
-        """
-        Create and save a user with the given username, email, and password.
-        """
-        if not username:
-            raise ValueError('The given username must be set')
+    def _create_user(self, email, password, **extra_fields):
+        """メールアドレスでの登録を必須にする"""
+        if not email:
+            raise ValueError('The given email must be set')
         email = self.normalize_email(email)
-        username = self.model.normalize_username(username)
-        user = self.model(username=username, email=email, **extra_fields)
+
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, username, email=None, password=None, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
+        """is_staff(管理サイトにログインできるか)と、is_superuer(全ての権限)をFalseに"""
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(username, email, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, username, email, password, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
+        """スーパーユーザーは、is_staffとis_superuserをTrueに"""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -67,33 +69,21 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(username, email, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """
-    An abstract base class implementing a fully featured User model with
-    admin-compliant permissions.
-    Username and password are required. Other fields are optional.
-    """
-    username_validator = UnicodeUsernameValidator()
+    """カスタムユーザーモデル."""
 
-    username = models.CharField(
-        _('username'),
-        max_length=150,
-        unique=True,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[username_validator],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        },
-    )
+    email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    email = models.EmailField(_('email address'), blank=True)
+
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
+        help_text=_(
+            'Designates whether the user can log into this admin site.'),
     )
     is_active = models.BooleanField(
         _('active'),
@@ -108,22 +98,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
-        #abstract = True # ここを削除しないといけないことを忘れない！！！！！！！！！！
-
-    def clean(self):
-        super().clean()
-        self.email = self.__class__.objects.normalize_email(self.email)
 
     def get_full_name(self):
-        """
-        Return the first_name plus the last_name, with a space in between.
-        """
+        """Return the first_name plus the last_name, with a space in
+        between."""
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
@@ -135,11 +119,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
+    @property
+    def username(self):
+        """username属性のゲッター
 
-
-
-
-
+        他アプリケーションが、username属性にアクセスした場合に備えて定義
+        メールアドレスを返す
+        """
+        return self.email
 
 class TeamInformations(models.Model):
 
