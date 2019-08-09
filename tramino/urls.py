@@ -15,4 +15,5 @@ urlpatterns = [
     path('team_detail/<int:team_id>/', views.team_detail, name='team_detail'),
     path('create/', views.create, name='create'),
     path('done/', views.done, name='done'),
+    path('logout/', views.logout, name='logout'),
 ]

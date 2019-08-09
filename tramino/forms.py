@@ -3,6 +3,8 @@ from django import forms
 from .models import TeamInformations, EventPostPool
 
 
+
+
 class TeamInformationsForm(forms.ModelForm):
 
     class Meta:

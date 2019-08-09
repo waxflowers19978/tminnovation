@@ -134,3 +134,6 @@ def done(request):
 
 
     return redirect('tramino:mypage')
+
+def logout(request):
+    return render(request, 'tramino/logout.html')
