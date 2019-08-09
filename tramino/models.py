@@ -2,15 +2,27 @@ from django.db import models
 import datetime
 from django.utils import timezone
 
+import os
 import uuid
 
 """
 画像の保存path名を一意に設定
 """
-def get_file_path(instance, filename):
-    ext = filename.split('.')[-1]
-    name = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join('team/team/', name)
+def get_team(self, filename):
+    prefix = 'team/team/'
+    name = str(uuid.uuid4()).replace('-', '')
+    extension = os.path.splitext(filename)[-1]
+    return prefix + name + extension
+def get_commander(self, filename):
+    prefix = 'team/commander/'
+    name = str(uuid.uuid4()).replace('-', '')
+    extension = os.path.splitext(filename)[-1]
+    return prefix + name + extension
+def get_event(self, filename):
+    prefix = 'event/'
+    name = str(uuid.uuid4()).replace('-', '')
+    extension = os.path.splitext(filename)[-1]
+    return prefix + name + extension
 
 # Create your models here.
 
@@ -32,7 +44,7 @@ class TeamInformations(models.Model):
     prefectures_name = models.CharField(max_length = 30, choices=prefectures_list)
     city_name = models.CharField(max_length = 50, null=True, blank=True)
     activity_place = models.CharField(max_length = 30)
-    team_picture = models.ImageField(upload_to="team/team/", default='SOME STRING')
+    team_picture = models.ImageField(upload_to=get_team, default='SOME STRING')
     url = models.CharField(max_length = 200, null=True, blank=True)
     achievement = models.CharField(max_length = 30, null=True, blank=True)
     practice_frequency = models.CharField(max_length = 30, choices=practice_frequency_list, null=True, blank=True)
@@ -42,7 +54,7 @@ class TeamInformations(models.Model):
     commander_name = models.CharField(max_length = 30)
     #position = models.CharField(max_length = 30)
     commander_career = models.CharField(max_length = 400, null=True, blank=True)
-    commander_picture = models.ImageField(upload_to="team/commander/", default='SOME STRING')
+    commander_picture = models.ImageField(upload_to=get_commander, default='SOME STRING')
     commander_introduction = models.CharField(max_length = 2000, null=True, blank=True)
 
     #created_at = models.DateTimeField(auto_now_add=True)
@@ -57,7 +69,7 @@ class EventPostPool(models.Model):
     event_host_team = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='event_posts')
     event_name = models.CharField(max_length = 50)
     event_description = models.CharField(max_length = 300)
-    event_picture = models.ImageField(upload_to="event/", default='SOME STRING', null=True, blank=True)
+    event_picture = models.ImageField(upload_to=get_event, default='SOME STRING', null=True, blank=True)
     # event_picture = models.ImageField(upload_to="event/", null=True, blank=True)
     event_date = models.DateField('date published')
     apply_deadline = models.DateField('date published')
