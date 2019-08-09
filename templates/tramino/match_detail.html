@@ -1,0 +1,44 @@
+{% extends 'tramino/base.html' %}
+
+{% block content %}
+  <h1>試合の詳細</h1>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>イベントID</th>
+        <td>{{match.id}}</td>
+      </tr>
+      <tr>
+        <th>ホストチーム</th>
+        <td>{{match.event_host_team}}</td>
+      </tr>
+      <tr>
+        <th>イベントの名前</th>
+        <td>{{match.event_name}}</td>
+      </tr>
+      <tr>
+        <th>イベントの写真</th>
+        <!-- <td>{{match.event_picture}}</td> -->
+        <td><img src="{{ match.event_picture.url }}" width="100" height="100"/></td>
+      </tr>
+      <tr>
+        <th>イベントの詳細</th>
+        <td>{{match.event_description}}</td>
+      </tr>
+      <tr>
+        <th>イベントの日付</th>
+        <td>{{match.event_date}}</td>
+      </tr>
+      <tr>
+        <th>申し込み期限</th>
+        <td>{{match.apply_deadline}}</td>
+      </tr>
+      <tr>
+        <th>掲載日</th>
+        <td>{{match.created_at}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br><br>
+  <p><a href="{% url 'tramino:match_search' %}">試合を探す</a></p>
+{% endblock %}

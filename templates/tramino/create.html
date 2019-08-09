@@ -1,0 +1,87 @@
+{% extends 'tramino/base.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+  <h1>チーム情報登録</h1>
+  <table class="table">
+    <!-- <form method="post" action="login"> -->
+    <!-- <form method="post" action="{% url 'tramino:mypage' %}"> -->
+    <form action="{% url 'tramino:mypage' %}" method="POST" enctype="multipart/form-data"> 
+    {% csrf_token %}
+    <tbody>
+      <tr>
+        <th>学校名※</th>
+        <td>{{ form.organization_name }}</td>
+      </tr>
+      <tr>
+        <th>部活名※</th>
+        <td>{{ form.club_name }}</td>
+      </tr>
+      <tr>
+        <th>性別※</th>
+        <td>{{ form.sex }}</td>
+      </tr>
+      <tr>
+        <th>学校の属性※</th>
+        <td>{{ form.school_attribute }}</td>
+      </tr>
+      <tr>
+        <th>県名※</th>
+        <td>{{ form.prefectures_name }}</td>
+      </tr>
+      <tr>
+        <th>市区町村</th>
+        <td>{{ form.city_name }}</td>
+      </tr>
+      <tr>
+        <th>活動場所※</th>
+        <td>{{ form.activity_place }}</td>
+      </tr>
+      <tr>
+        <th>チームの写真</th>
+        <td>{{ form.team_picture }}</td>
+      </tr>
+      <tr>
+        <th>URL</th>
+        <td>{{ form.url }}</td>
+      </tr>
+      <tr>
+        <th>成績</th>
+        <td>{{ form.achievement }}</td>
+      </tr>
+      <tr>
+        <th>活動頻度</th>
+        <td>{{ form.practice_frequency }}</td>
+      </tr>
+      <tr>
+        <th>人数</th>
+        <td>{{ form.number_of_members }}</td>
+      </tr>
+      <tr>
+        <th>顧問の名前※</th>
+        <td>{{ form.commander_name }}</td>
+      </tr>
+      <tr>
+        <th>顧問のキャリア</th>
+        <td>{{ form.commander_career }}</td>
+      </tr>
+      <tr>
+        <th>顧問の写真</th>
+        <td>{{ form.commander_picture }}</td>
+      </tr>
+      <tr>
+        <th>顧問の紹介</th>
+        <td>{{ form.commander_introduction }}</td>
+      </tr>
+      <tr>
+        <th><input class="btn btn-primary" type="submit" value="Submit"></th>
+        <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+      </tr>
+    </tbody>
+    </form>
+  </table>
+{% endblock %}

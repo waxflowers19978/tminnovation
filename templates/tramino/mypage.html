@@ -1,0 +1,10 @@
+{% extends 'tramino/base.html' %}
+
+{% block content %}
+  <p>1 <a href="{% url 'tramino:match_search' %}">練習試合をサーチ</a></p>
+  <p>2 <a href="{% url 'tramino:event_post' %}">対戦相手を募集</a></p>
+  <p>3 <a href="{% url 'tramino:team_search' %}">チームを検索</a></p>
+  <p>4 やりとり</p>
+  <p>5 メッセージテンプレートの作成</p>
+  <p>6 募集状況の確認</p>
+{% endblock %}

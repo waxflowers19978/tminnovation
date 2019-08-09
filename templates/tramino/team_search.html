@@ -1,0 +1,16 @@
+{% extends 'tramino/base.html' %}
+
+{% block content %}
+  <h1>チームを探す</h1>
+  <table class="table">
+    <tbody>
+    {% for team in teams %}
+      <tr>
+        <th>{{ team.id }}</th>
+        <td><td><a href="{% url 'tramino:team_detail' team_id=team.id %}">{{team.organization_name}}</a></td></td>
+        <td>{{ team.club_name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
