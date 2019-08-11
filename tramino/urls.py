@@ -16,4 +16,10 @@ urlpatterns = [
     path('create/', views.create, name='create'),
     path('done/', views.done, name='done'),
     path('logout/', views.logout, name='logout'),
+    path('myteams/',views.MyTeamsListView.as_view(), name='myteams'),    
+    path('myteams/detail/<int:pk>/', views.MyTeamsDetailView.as_view(), name='myteams_detail'),
+    path('myteams/update/<int:pk>/', views.MyTeamsUpdateView.as_view(), name='edit_myteams'),
+    path('myteams/delete/<int:pk>/', views.MyTeamsDeleteView.as_view(), name='delete_myteams'),
+    path('user_update/',views.UserUpdateView.as_view(), name='user_update'),    
+
 ]

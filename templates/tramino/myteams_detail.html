@@ -1,0 +1,84 @@
+{% extends 'tramino/base.html' %}
+
+{% block content %}
+
+<h1>チームの詳細</h1>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>チームID</th>
+      <td>{{ teaminformations.id }}</td>
+    </tr>
+    <tr>
+      <th>団体名</th>
+      <td>{{ teaminformations.organization_name }}</td>
+    </tr>
+    <tr>
+      <th>部活名</th>
+      <td>{{ teaminformations.club_name }}</td>
+    </tr>
+    <tr>
+      <th>プレイヤー</th>
+      <td>{{ teaminformations.sex }}</td>
+    </tr>
+    <tr>
+      <th>学校区分</th>
+      <td>{{ teaminformations.school_attribute }}</td>
+    </tr>
+    <tr>
+      <th>都道府県</th>
+      <td>{{ teaminformations.prefectures_name }}</td>
+    </tr>
+    <tr>
+      <th>市区町村</th>
+      <td>{{ teaminformations.city_name }}</td>
+    </tr>
+    <tr>
+      <th>活動場所</th>
+      <td>{{ teaminformations.activity_place }}</td>
+    </tr>      
+    <tr>
+      <th>チームの写真</th>
+      <!-- <td>{{match.event_picture}}</td> -->
+      <td><img src="/media/{{ teaminformations.team_picture}}" width="100" height="100"/></td>
+    </tr>
+    <tr>
+      <th>URL</th>
+      <td>{{ teaminformations.url }}</td>
+    </tr>
+    <tr>
+      <th>チーム成績</th>
+      <td>{{ teaminformations.achievement }}</td>
+    </tr>
+    <tr>
+      <th>練習頻度</th>
+      <td>{{ teaminformations.practice_frequency }}</td>
+    </tr>
+    <tr>
+      <th>プレイヤー数</th>
+      <td>{{ teaminformations.number_of_menbers }}</td>
+    </tr>
+
+    <tr>
+      <th>指導者名</th>
+      <td>{{ teaminformations.commander_name }}</td>
+    </tr>
+    <tr>
+      <th>指導者経歴</th>
+      <td>{{ teaminformations.commander_career }}</td>
+    </tr>
+    <tr>
+      <th>指導者の写真</th>
+      <td><img src="/media/{{ teaminformations.commander_picture}}" width="100" height="100"/></td>
+    </tr>
+    <tr>
+      <th>指導者紹介文</th>
+      <td>{{ teaminformations.commander_introduction }}</td>
+    </tr>
+
+  </tbody>
+</table>
+<br><br>
+
+
+{% endblock %}

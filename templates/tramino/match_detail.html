@@ -39,6 +39,49 @@
       </tr>
     </tbody>
   </table>
-  <br><br>
+  <br>
+  <h1><a href="{% url 'tramino:team_detail' match.host_team_id %}">チームの詳細を見る</a></h1>
+  <br>
+
+
+  {% for myteam in my_teams %}
+  <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data"> 
+  <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
+  {% csrf_token %}
+  <tbody>
+    <tr>
+      <th><input class="btn btn-primary" type="submit" value="{{ myteam.organization_name }}{{ myteam.club_name }}({{ myteam.school_attribute }})で応募する"></th>
+      <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+    </tr>
+  </tbody>
+  <input type="hidden" name="page_name" value="event_apply">
+  <input type="hidden" name="event_id" value={{match.id}}>
+  <input type="hidden" name="apply_team_id" value={{myteam.id}}>
+  </form>
+  {% endfor %}
+
+  <br>
+  <br>
+  
+  {% for myteam in my_teams %}
+  <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data"> 
+  <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
+  {% csrf_token %}
+  <tbody>
+    <tr>
+      <th><input class="btn btn-primary" type="submit" value="{{ myteam.organization_name }}{{ myteam.club_name }}({{ myteam.school_attribute }})の気になるリストに追加"></th>
+      <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+    </tr>
+  </tbody>
+  <input type="hidden" name="page_name" value="event_favorite">
+  <input type="hidden" name="event_id" value={{match.id}}>
+  <input type="hidden" name="apply_team_id" value={{myteam.id}}>
+  </form>
+  {% endfor %}
+
+
+
+
   <p><a href="{% url 'tramino:match_search' %}">試合を探す</a></p>
-{% endblock %}
+
+  {% endblock %}
