@@ -11,17 +11,19 @@
         <th>団体名</th>
         <th>部活名</th>
         <th>分類</th>
+        <th>プロフィール完成率</th>
         <th>詳細</th>
         <th>更新</th>
         <th>削除</th>
       </tr>
     </thead>
     <tbody>
-      {% for teaminformations in teaminformationss %}
+      {% for teaminformations in my_teams %}
         <tr>
           <td>{{ teaminformations.organization_name }}</td>
           <td>{{ teaminformations.club_name }}</td>
           <td>{{ teaminformations.school_attribute }}</td>
+          <td>{{ teaminformations.score }}%</td>
           <td><a href="{% url 'tramino:myteams_detail' teaminformations.id %}">詳細画面へ</a></td>
           <td><a href="{% url 'tramino:edit_myteams' teaminformations.id %}">更新画面へ</a></td>
           <td><a href="{% url 'tramino:delete_myteams' teaminformations.id %}">削除画面へ</a></td>

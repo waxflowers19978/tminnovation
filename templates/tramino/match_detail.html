@@ -1,6 +1,7 @@
 {% extends 'tramino/base.html' %}
 
 {% block content %}
+  <h3>メッセージアラート：{{ message }}</h3>
   <h1>試合の詳細</h1>
   <table class="table">
     <tbody>
@@ -40,10 +41,10 @@
     </tbody>
   </table>
   <br>
-  <h1><a href="{% url 'tramino:team_detail' match.host_team_id %}">チームの詳細を見る</a></h1>
+  <h2><a href="{% url 'tramino:team_detail' match.host_team_id %}">チームの詳細を見る</a></h2>
   <br>
 
-
+  <h2>応募する</h2>
   {% for myteam in my_teams %}
   <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data"> 
   <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
@@ -61,10 +62,10 @@
   {% endfor %}
 
   <br>
-  <br>
-  
+  <h2>気になるリストに追加</h2>
+
   {% for myteam in my_teams %}
-  <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data"> 
+  <form action="{% url 'tramino:match_detail' match.id %}" method="POST" enctype="multipart/form-data"> 
   <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
   {% csrf_token %}
   <tbody>

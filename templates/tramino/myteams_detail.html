@@ -1,7 +1,7 @@
 {% extends 'tramino/base.html' %}
 
 {% block content %}
-
+<h3>プロフィール完成率：{{ profile_complate }}%</h3>
 <h1>チームの詳細</h1>
 <table class="table">
   <tbody>
@@ -78,7 +78,31 @@
 
   </tbody>
 </table>
-<br><br>
+<br>
+<h2><a href="{% url 'tramino:myteams_create_past_game' teaminformations.id %}">過去の対戦履歴を追加</a></h2>
 
+<h2>登録済みの対戦履歴</h2>
 
+<table>
+  <thead>
+  <tr>
+    <th>対戦校</th>
+    <th>スコア</th>
+    <th>対戦区分</th>
+    <th>実施時期</th>
+    <th>説明</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for pastgamerecord in pastgamerecords %}
+  <tr>
+    <td>{{ teaminformations.organization_name }} VS {{ pastgamerecord.opponent_team_name }}</td>
+    <td>{{ pastgamerecord.my_score }} ー {{ pastgamerecord.opponent_score }}</td>
+    <td>{{ pastgamerecord.game_category }}</td>
+    <td>{{ pastgamerecord.game_date }}</td>
+    <td>{{ pastgamerecord.game_description }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

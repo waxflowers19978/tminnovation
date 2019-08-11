@@ -15,10 +15,9 @@ from .python_file.model_form_save import *
 
 """ 08/10以降追加 """
 from django.shortcuts import get_object_or_404, resolve_url
-from .forms import MyTeamsUpdateForm
 
-from django.views.generic import ListView, UpdateView, DetailView, UpdateView, DeleteView
-# from .forms import EventApplyPoolForm
+from django.views.generic import ListView, UpdateView, DetailView, UpdateView, DeleteView, CreateView
+from .python_file.profile_complate_percent import *
 
 # Create your views here.
 
@@ -26,6 +25,7 @@ from django.views.generic import ListView, UpdateView, DetailView, UpdateView, D
 
 def index(request):
     return render(request, 'tramino/index.html')
+
 
 def mypage(request):
     if request.method == 'POST':
@@ -67,20 +67,29 @@ def match_search(request):
     }
     return render(request, 'tramino/match_search.html', params)
 
-# def match_detail(request):
-#     return render(request, 'tramino/match_detail.html')
 
 def match_detail(request, event_id):
     username = request.user.username
     match  = EventPostPool.objects.get(id=event_id)
     my_teams = TeamInformations.objects.filter(user=request.user.id)
     match.host_team_id = match.event_host_team.id# イベント詳細ページからチーム詳細に飛ぶためのURL生成に必要なイベントホストチームID
-
     params = {
         'match': match,
         'my_teams': my_teams,
         'username': username,
     }
+
+    if request.method == 'POST':
+        if request.POST['page_name'] == 'event_favorite':
+
+            event_id, apply_team_id = request.POST['event_id'], request.POST['apply_team_id']
+            apply = FavoriteEventPool()
+            apply.event_post_id, apply.guest_team_id = EventPostPool.objects.get(id=event_id) ,TeamInformations.objects.get(id=apply_team_id)
+            apply.save()
+            message = 'イベントを気になるリストに追加しました。'
+            params['message'] = message
+
+
     return render(request, 'tramino/match_detail.html', params)
 
 
@@ -107,11 +116,29 @@ def team_search(request):
 def team_detail(request, team_id):
     username = request.user.username
     team  = TeamInformations.objects.get(id=team_id)
-
+    my_teams = TeamInformations.objects.filter(user=request.user.id)
+    events = EventPostPool.objects.all().filter(event_host_team=team_id)
+    pastgamerecords = PastGameRecords.objects.all().filter(register_team_id=team_id)
     params = {
         'team': team,
+        'my_teams': my_teams,
         'username': username,
+        'events':events,
+        'pastgamerecords':pastgamerecords,
     }
+
+    if request.method == 'POST':
+        if request.POST['page_name'] == 'team_favorite':
+            team_id, apply_team_id = request.POST['team_id'], request.POST['apply_team_id']
+            apply = FavoriteTeamPool()
+            apply.host_team_id, apply.guest_team_id = TeamInformations.objects.get(id=team_id) ,TeamInformations.objects.get(id=apply_team_id)
+            apply.save()
+            message = 'チームを気になるリストに追加しました。'
+            params['message'] = message
+
+
+
+
     return render(request, 'tramino/team_detail.html', params)
 
 
@@ -149,13 +176,13 @@ def done(request):
             apply.save()
             message = 'イベントに応募しました。'
 
-        elif request.POST['page_name'] == 'event_favorite':
+        # elif request.POST['page_name'] == 'event_favorite':
 
-            event_id, apply_team_id = request.POST['event_id'], request.POST['apply_team_id']
-            apply = FavoriteEventPool()
-            apply.event_post_id, apply.guest_team_id = EventPostPool.objects.get(id=event_id) ,TeamInformations.objects.get(id=apply_team_id)
-            apply.save()
-            message = 'イベントを気になるリストに追加しました。'
+        #     event_id, apply_team_id = request.POST['event_id'], request.POST['apply_team_id']
+        #     apply = FavoriteEventPool()
+        #     apply.event_post_id, apply.guest_team_id = EventPostPool.objects.get(id=event_id) ,TeamInformations.objects.get(id=apply_team_id)
+        #     apply.save()
+        #     message = 'イベントを気になるリストに追加しました。'
 
         params = {
             'message': message,
@@ -164,6 +191,7 @@ def done(request):
 
 
     return redirect('tramino:mypage')
+
 
 def logout(request):
     return render(request, 'tramino/logout.html')
@@ -198,6 +226,14 @@ class MyTeamsListView(ListView):
         context = super().get_context_data(**kwargs)
         username = self.request.user.username
         context['username'] = username
+        my_teams = TeamInformations.objects.filter(user=self.request.user.id)
+        context['my_teams'] = my_teams
+        scores = []
+        for my_team in my_teams:# 各チームの達成率を算出し各パラメータに渡す
+            pastgamerecords = PastGameRecords.objects.filter(register_team_id=my_team.id)
+            scores.append(percent(my_team,pastgamerecords.count()))
+        for i,score in enumerate(scores):
+            my_teams[i].score = score
         return context
 
 
@@ -211,6 +247,9 @@ class MyTeamsDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         teaminformations = get_object_or_404(TeamInformations, pk=self.kwargs.get('pk'))
+        pastgamerecords = PastGameRecords.objects.filter(register_team_id=self.kwargs.get('pk'))
+        context['profile_complate'] = percent(teaminformations,pastgamerecords.count())# プロフィール完成率計算
+        context['pastgamerecords'] = pastgamerecords
         username = self.request.user.username
         context['username'] = username
         return context
@@ -238,7 +277,6 @@ class MyTeamsUpdateView(UpdateView):
 class MyTeamsDeleteView(DeleteView):
     """ チームを削除するためだけのページ """
     model = TeamInformations
-    form_class = MyTeamsUpdateForm
     template_name = 'tramino/delete_myteams.html'
 
     def get_success_url(self):
@@ -252,3 +290,19 @@ class MyTeamsDeleteView(DeleteView):
         return context
 
 
+class PastGameCreateView(CreateView):
+    """ チームそれぞれの対戦履歴を登録するページ """
+    model = PastGameRecords
+    fields = '__all__'# ホントは下のように一つずつ指定した方がいい
+    template_name = 'tramino/create_past_game.html'
+
+    def get_success_url(self):
+        return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
+        # return resolve_url('tramino:myteams')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        teaminformations = get_object_or_404(TeamInformations, pk=self.kwargs.get('pk'))
+        username = self.request.user.username
+        context['username'] = username
+        return context

@@ -30,14 +30,3 @@ class EventPostPoolForm(forms.ModelForm):
 
 
 
-class MyTeamsUpdateForm(forms.ModelForm):
-    """チーム情報更新フォーム"""
-
-    class Meta:
-        model = TeamInformations
-        fields = ('commander_name','commander_picture',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'

@@ -21,5 +21,6 @@ urlpatterns = [
     path('myteams/update/<int:pk>/', views.MyTeamsUpdateView.as_view(), name='edit_myteams'),
     path('myteams/delete/<int:pk>/', views.MyTeamsDeleteView.as_view(), name='delete_myteams'),
     path('user_update/',views.UserUpdateView.as_view(), name='user_update'),    
+    path('myteams/create_past_game/<int:pk>/', views.PastGameCreateView.as_view(), name='myteams_create_past_game'),
 
 ]
