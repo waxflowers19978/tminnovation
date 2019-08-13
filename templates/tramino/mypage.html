@@ -9,4 +9,61 @@
   <p>6 募集状況の確認</p>
   <p>7 <a href="{% url 'tramino:user_update' %}">ユーザー情報の変更</a></p>
   <p>8 <a href="{% url 'tramino:myteams' %}">登録チーム情報の確認</a></p>
+
+<br><br>
+--------------------↓↓↓↓チームごとの募集状況、応募状況、気になるイベント、フォロー中↓↓↓↓---------------------
+{% for my_team in my_teams %}
+ <h1>{{ my_team.organization_name }}{{ my_team.club_name }}({{ my_team.school_attribute }})</h1>
+ 
+  <h3>◆募集状況</h3>
+  <table class="table">
+    <tbody>
+      {% for post_event in my_team.post_events %}
+      <tr>
+        <th><a href="{% url 'tramino:match_detail' post_event.id %}">{{ post_event.event_name }}</a></th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>◆応募したイベント</h3>
+  <table class="table">
+    <tbody>
+      {% for apply_event in my_team.apply_events %}
+      <tr>
+        <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}">{{ apply_event.event_post_id.event_name }}</a></th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>◆気になるイベント</h3>
+  <table class="table">
+    <tbody>
+    {% for favorite_event in my_team.favorite_events %}
+      <tr>
+        <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}">{{ favorite_event.event_post_id.event_name }}</a></th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+  <h3>◆フォロー中のチーム</h3>
+  <table class="table">
+    <tbody>
+    {% for favorite_team in my_team.favorite_teams %}
+      <tr>
+        <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endfor %}
+
+
+
+
+
 {% endblock %}

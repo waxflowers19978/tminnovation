@@ -28,6 +28,20 @@ def index(request):
 
 
 def mypage(request):
+    username = request.user.username
+    my_teams = TeamInformations.objects.filter(user=request.user.id)
+    my_teams_id = []
+    for my_team in my_teams:
+        my_teams_id.append(my_team.id)
+    for i,my_team_id in enumerate(my_teams_id):
+        my_teams[i].post_events =  EventPostPool.objects.all().filter(event_host_team=my_team_id)
+        my_teams[i].apply_events =  EventApplyPool.objects.all().filter(guest_team_id=my_team_id)
+        my_teams[i].favorite_events =  FavoriteEventPool.objects.all().filter(guest_team_id=my_team_id)
+        my_teams[i].favorite_teams =  FavoriteTeamPool.objects.all().filter(guest_team_id=my_team_id)
+    params = {
+        'username': username,
+        'my_teams': my_teams,
+    }
     if request.method == 'POST':
         form = TeamInformationsForm(request.POST, request.FILES)
         if form.is_valid():
@@ -50,11 +64,7 @@ def mypage(request):
             team.commander_picture = form.cleaned_data['commander_picture']
             team.commander_introduction = form.cleaned_data['commander_introduction']
             team.save()
-        return render(request, 'tramino/mypage.html')
-    username = request.user.username
-    params = {
-        'username': username,
-    }
+        # return render(request, 'tramino/mypage.html')
     return render(request, 'tramino/mypage.html', params)
 
 
@@ -69,27 +79,51 @@ def match_search(request):
 
 
 def match_detail(request, event_id):
+    """
+    GET : match_searchやteam_detail,mypageのリンクから移動してくる
+    POST : match_detailからイベントをファボした際POSTで入りなおす
+    """
+    message = ""
     username = request.user.username
     match  = EventPostPool.objects.get(id=event_id)
     my_teams = TeamInformations.objects.filter(user=request.user.id)
     match.host_team_id = match.event_host_team.id# イベント詳細ページからチーム詳細に飛ぶためのURL生成に必要なイベントホストチームID
-    params = {
-        'match': match,
-        'my_teams': my_teams,
-        'username': username,
-    }
-
+    applies = EventApplyPool.objects.all().filter(event_post_id=event_id)
     if request.method == 'POST':
         if request.POST['page_name'] == 'event_favorite':
 
             event_id, apply_team_id = request.POST['event_id'], request.POST['apply_team_id']
             apply = FavoriteEventPool()
             apply.event_post_id, apply.guest_team_id = EventPostPool.objects.get(id=event_id) ,TeamInformations.objects.get(id=apply_team_id)
-            apply.save()
-            message = 'イベントを気になるリストに追加しました。'
-            params['message'] = message
+            favorited_events = FavoriteEventPool.objects.all().filter(guest_team_id=apply.guest_team_id.id)
+            if apply.event_post_id.id in list(favorited_events.values_list('event_post_id',flat=True)):
+                FavoriteEventPool.objects.all().filter(guest_team_id=apply.guest_team_id.id).get(event_post_id=apply.event_post_id.id).delete()
+                message = '気になるを取り消しました。'
+            elif int(match.host_team_id) == int(apply.guest_team_id.id):
+                message = '同チームのイベントは気になるリストに追加できません'
+
+            else:
+                apply.save()
+                message = '気になるに追加しました。'
 
 
+    my_teams_id = []# 気になる済みかどうかの判定
+    for my_team in my_teams:
+        my_teams_id.append(my_team.id)
+    for i,my_team_id in enumerate(my_teams_id):
+        favo = list(FavoriteEventPool.objects.all().filter(guest_team_id=my_team_id).values_list('event_post_id',flat=True))
+        if int(event_id) in favo:
+            my_teams[i].favo_judge = 'の気になるリストから取り消す'
+        else:
+            my_teams[i].favo_judge = 'の気になるリストに追加する'
+
+    params = {
+        'match': match,
+        'my_teams': my_teams,
+        'username': username,
+        'applies' : applies,
+        'message' : message,
+    }
     return render(request, 'tramino/match_detail.html', params)
 
 
@@ -114,30 +148,52 @@ def team_search(request):
 
 
 def team_detail(request, team_id):
+    """
+    GET : team_searchやmatch_detailのリンクから移動してくる
+    POST : team_detailからチームをフォローした際POSTで入りなおす
+    """
+    message = ""
+    if request.method == 'POST':
+        if request.POST['page_name'] == 'team_favorite':
+            team_id, apply_team_id = request.POST['team_id'], request.POST['apply_team_id']
+            apply = FavoriteTeamPool()
+            apply.host_team_id, apply.guest_team_id = TeamInformations.objects.get(id=team_id) ,TeamInformations.objects.get(id=apply_team_id)
+
+            favorited_teams = FavoriteTeamPool.objects.all().filter(guest_team_id=apply.guest_team_id.id)
+            if apply.host_team_id.id in list(favorited_teams.values_list('host_team_id',flat=True)):
+                FavoriteTeamPool.objects.all().filter(guest_team_id=apply.guest_team_id.id).get(host_team_id=apply.host_team_id.id).delete()
+                message = 'フォローを解除しました。'
+            elif int(team_id) == apply.guest_team_id.id:
+                message = '同チームをフォローすることはできません'
+            else:
+                apply.save()
+                message = 'チームをフォローしました。'
+
+    
     username = request.user.username
     team  = TeamInformations.objects.get(id=team_id)
     my_teams = TeamInformations.objects.filter(user=request.user.id)
     events = EventPostPool.objects.all().filter(event_host_team=team_id)
     pastgamerecords = PastGameRecords.objects.all().filter(register_team_id=team_id)
+
+    my_teams_id = []# フォロー済みかどうかの判定
+    for my_team in my_teams:
+        my_teams_id.append(my_team.id)
+    for i,my_team_id in enumerate(my_teams_id):
+        follow = list(FavoriteTeamPool.objects.all().filter(guest_team_id=my_team_id).values_list('host_team_id',flat=True))
+        if int(team_id) in follow:
+            my_teams[i].follow_judge = 'からのフォローを解除する'
+        else:
+            my_teams[i].follow_judge = 'からフォローする'
+        
     params = {
         'team': team,
         'my_teams': my_teams,
         'username': username,
         'events':events,
         'pastgamerecords':pastgamerecords,
+        'message':message,
     }
-
-    if request.method == 'POST':
-        if request.POST['page_name'] == 'team_favorite':
-            team_id, apply_team_id = request.POST['team_id'], request.POST['apply_team_id']
-            apply = FavoriteTeamPool()
-            apply.host_team_id, apply.guest_team_id = TeamInformations.objects.get(id=team_id) ,TeamInformations.objects.get(id=apply_team_id)
-            apply.save()
-            message = 'チームを気になるリストに追加しました。'
-            params['message'] = message
-
-
-
 
     return render(request, 'tramino/team_detail.html', params)
 
@@ -175,14 +231,6 @@ def done(request):
             apply.guest_team_id = TeamInformations.objects.get(id=apply_team_id)
             apply.save()
             message = 'イベントに応募しました。'
-
-        # elif request.POST['page_name'] == 'event_favorite':
-
-        #     event_id, apply_team_id = request.POST['event_id'], request.POST['apply_team_id']
-        #     apply = FavoriteEventPool()
-        #     apply.event_post_id, apply.guest_team_id = EventPostPool.objects.get(id=event_id) ,TeamInformations.objects.get(id=apply_team_id)
-        #     apply.save()
-        #     message = 'イベントを気になるリストに追加しました。'
 
         params = {
             'message': message,

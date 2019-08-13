@@ -109,14 +109,14 @@
   <h3><a href="{% url 'tramino:match_detail' event.id %}">{{event.event_name}}</a></h3>
   {% endfor %}
 
-  <h2>気になるチームに追加</h2>
+  <h2>このチームをフォローする</h2>
   {% for myteam in my_teams %}
   <form action="{% url 'tramino:team_detail' team.id %}" method="POST" enctype="multipart/form-data"> 
   <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
   {% csrf_token %}
   <tbody>
     <tr>
-      <th><input class="btn btn-primary" type="submit" value="{{ myteam.organization_name }}{{ myteam.club_name }}({{ myteam.school_attribute }})の気になるリストに追加"></th>
+      <th><input class="btn btn-primary" type="submit" value="{{ myteam.organization_name }}{{ myteam.club_name }}({{ myteam.school_attribute }}){{ myteam.follow_judge }}"></th>
       <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
     </tr>
   </tbody>

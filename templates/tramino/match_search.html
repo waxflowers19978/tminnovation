@@ -7,8 +7,8 @@
     {% for event in events %}
       <tr>
         <th>{{ event.id }}</th>
-        <td><a href="{% url 'tramino:match_detail' event_id=event.id %}">{{event.event_host_team}}</a></td>
-        <td>{{ event.event_name }}</td>
+        <td>{{event.event_host_team}}</td>
+        <td><a href="{% url 'tramino:match_detail' event_id=event.id %}">{{ event.event_name }}</a></td>
         <td>{{ event.event_date }}</td>
       </tr>
       {% endfor %}
