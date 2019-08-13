@@ -71,6 +71,13 @@ def mypage(request):
 def match_search(request):
     username = request.user.username
     event_post_pool = EventPostPool.objects.all()
+    my_teams = TeamInformations.objects.filter(user=request.user.id)
+    my_teams_id = []# 自分のチームIDを持つイベントを表示しないようにする
+    for my_team in my_teams:
+        my_teams_id.append(my_team.id)
+    for i,my_team_id in enumerate(my_teams_id):
+        event_post_pool = event_post_pool.exclude(event_host_team=my_team_id)
+
     params = {
         'events': event_post_pool,
         'username': username,
@@ -106,24 +113,31 @@ def match_detail(request, event_id):
                 apply.save()
                 message = '気になるに追加しました。'
 
-
-    my_teams_id = []# 気になる済みかどうかの判定
+    my_teams_id = []
     for my_team in my_teams:
         my_teams_id.append(my_team.id)
-    for i,my_team_id in enumerate(my_teams_id):
-        favo = list(FavoriteEventPool.objects.all().filter(guest_team_id=my_team_id).values_list('event_post_id',flat=True))
-        if int(event_id) in favo:
-            my_teams[i].favo_judge = 'の気になるリストから取り消す'
-        else:
-            my_teams[i].favo_judge = 'の気になるリストに追加する'
 
-    params = {
-        'match': match,
-        'my_teams': my_teams,
-        'username': username,
-        'applies' : applies,
-        'message' : message,
-    }
+    if match.host_team_id in my_teams_id:# 自分のチームの投稿なら応募やファボをできないようにする
+        params = {
+            'match': match,
+            'username': username,
+            'applies' : applies,
+            'message' : message,
+        }
+    else:# 気になる済みかどうかの判定
+        for i,my_team_id in enumerate(my_teams_id):
+            favo = list(FavoriteEventPool.objects.all().filter(guest_team_id=my_team_id).values_list('event_post_id',flat=True))
+            if int(event_id) in favo:
+                my_teams[i].favo_judge = 'の気になるリストから取り消す'
+            else:
+                my_teams[i].favo_judge = 'の気になるリストに追加する'
+        params = {
+            'match': match,
+            'my_teams': my_teams,
+            'username': username,
+            'applies' : applies,
+            'message' : message,
+        }
     return render(request, 'tramino/match_detail.html', params)
 
 
@@ -139,7 +153,8 @@ def event_post(request):
 
 def team_search(request):
     username = request.user.username
-    team_informations = TeamInformations.objects.all()
+    team_informations = TeamInformations.objects.all().exclude(user=request.user.id)
+
     params = {
         'teams': team_informations,
         'username': username,
@@ -176,24 +191,33 @@ def team_detail(request, team_id):
     events = EventPostPool.objects.all().filter(event_host_team=team_id)
     pastgamerecords = PastGameRecords.objects.all().filter(register_team_id=team_id)
 
-    my_teams_id = []# フォロー済みかどうかの判定
+    my_teams_id = []
     for my_team in my_teams:
         my_teams_id.append(my_team.id)
-    for i,my_team_id in enumerate(my_teams_id):
-        follow = list(FavoriteTeamPool.objects.all().filter(guest_team_id=my_team_id).values_list('host_team_id',flat=True))
-        if int(team_id) in follow:
-            my_teams[i].follow_judge = 'からのフォローを解除する'
-        else:
-            my_teams[i].follow_judge = 'からフォローする'
-        
-    params = {
-        'team': team,
-        'my_teams': my_teams,
-        'username': username,
-        'events':events,
-        'pastgamerecords':pastgamerecords,
-        'message':message,
-    }
+    if team_id in my_teams_id:# 自分のチームのならフォローできないようにする
+        params = {
+            'team': team,
+            'username': username,
+            'events':events,
+            'pastgamerecords':pastgamerecords,
+            'message':message,
+        }
+    else:# フォロー済みかどうかの判定
+        for i,my_team_id in enumerate(my_teams_id):
+            follow = list(FavoriteTeamPool.objects.all().filter(guest_team_id=my_team_id).values_list('host_team_id',flat=True))
+            if int(team_id) in follow:
+                my_teams[i].follow_judge = 'からのフォローを解除する'
+            else:
+                my_teams[i].follow_judge = 'からフォローする'
+            
+        params = {
+            'team': team,
+            'my_teams': my_teams,
+            'username': username,
+            'events':events,
+            'pastgamerecords':pastgamerecords,
+            'message':message,
+        }
 
     return render(request, 'tramino/team_detail.html', params)
 
@@ -207,6 +231,7 @@ def create(request):
 
 
 def done(request):
+    username = request.user.username
     if request.method == 'POST':
         if request.POST['page_name'] == 'event_post':
 
@@ -234,6 +259,7 @@ def done(request):
 
         params = {
             'message': message,
+            'username' : username,
         }
         return render(request, 'tramino/done.html', params)
 

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 result = ""
 while True:
     input_data = str(input())
