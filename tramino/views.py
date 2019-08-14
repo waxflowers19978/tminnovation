@@ -38,10 +38,15 @@ def mypage(request):
         my_teams[i].apply_events =  EventApplyPool.objects.all().filter(guest_team_id=my_team_id)
         my_teams[i].favorite_events =  FavoriteEventPool.objects.all().filter(guest_team_id=my_team_id)
         my_teams[i].favorite_teams =  FavoriteTeamPool.objects.all().filter(guest_team_id=my_team_id)
+
+    commander_info = str(my_teams[0].organization_name) + str(my_teams[0].commander_name)
+    commander_picture = my_teams[0].commander_picture
     params = {
         'username': username,
         'my_teams': my_teams,
-    }
+        'commander_info':commander_info,
+        'commander_pic':commander_picture,
+        }
     if request.method == 'POST':
         form = TeamInformationsForm(request.POST, request.FILES)
         if form.is_valid():

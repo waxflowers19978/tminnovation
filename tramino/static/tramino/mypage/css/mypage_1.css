@@ -1,0 +1,57 @@
+
+main{
+  /* background:#1b1b2b; */
+  /* background:#4b4b75; */
+  background:#837fa3;
+  padding:75px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.mypage-main-info{
+    text-align:center;
+
+}
+
+.mypage-title{
+  color:#c0c0c0;
+  font-weight:100;
+}
+
+.mypage-btn{
+  color:#999;
+  background:rgba(0, 0, 0, 0.5);
+  padding:10px 20px;
+  font-size:12px;
+  text-decoration:none;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.mypage-btn:hover{
+  border:none;
+  background:rgba(0, 0, 0, 0.4);
+  background:#fff;
+  padding:20px 20px; #000;
+  color:#1b1b1b;
+}
+
+.mypage-info-footer{
+  font-size:8px;
+  color:#fff;
+  clear:both;
+  display:block;
+  letter-spacing:5px;
+  border:1px solid #fff;
+  padding:5px;
+  text-decoration:none;
+  width:210px;
+  margin:auto;
+  margin-top:30px;
+}
+
+
+.commander-img {
+    border-radius: 50%;  /* 角丸半径を50%にする(=円形にする) */
+    width:  180px;       /* ※縦横を同値に */
+    height: 180px;       /* ※縦横を同値に */
+}
