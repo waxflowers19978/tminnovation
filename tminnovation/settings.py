@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'tramino',
     'gunicorn',
     'django_cleanup',
+    'imagekit',
 ]
 
 MIDDLEWARE = [

@@ -326,6 +326,8 @@ class MyTeamsDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         teaminformations = get_object_or_404(TeamInformations, pk=self.kwargs.get('pk'))
+        # commander_pic = teaminformations.commander_picture.url
+
         pastgamerecords = PastGameRecords.objects.filter(register_team_id=self.kwargs.get('pk'))
         context['profile_complate'] = percent(teaminformations,pastgamerecords.count())# プロフィール完成率計算
         context['pastgamerecords'] = pastgamerecords
@@ -385,3 +387,6 @@ class PastGameCreateView(CreateView):
         username = self.request.user.username
         context['username'] = username
         return context
+
+
+    

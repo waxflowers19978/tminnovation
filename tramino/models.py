@@ -37,6 +37,9 @@ from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
 
 
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import ResizeToFill, Transpose
+
 class UserManager(BaseUserManager):
     """ユーザーマネージャー."""
 
@@ -156,8 +159,20 @@ class TeamInformations(models.Model):
     commander_name = models.CharField(max_length = 30)
     #position = models.CharField(max_length = 30)
     commander_career = models.CharField(max_length = 400, null=True, blank=True)
-    commander_picture = models.ImageField(upload_to=get_commander, default='SOME STRING')# SOME STRINGはNO CHANGEでお願い
+    # commander_picture = models.ImageField(upload_to=get_commander, default='SOME STRING')# SOME STRINGはNO CHANGEでお願い
+    commander_picture = ProcessedImageField(upload_to=get_commander, 
+                                            processors=[Transpose(),ResizeToFill(200, 200)],
+                                            format='JPEG',
+                                            options={'quality': 60},
+                                            default='SOME STRING')# SOME STRINGはNO CHANGEでお願い
+
     commander_introduction = models.CharField(max_length = 2000, null=True, blank=True)
+
+    # thumbnail = ImageSpecField(source='commander_picture',
+    #                         processors=[ResizeToFill(250,250)],
+    #                         format="JPEG",
+    #                         options={'quality': 60}
+    #                         )
 
     #created_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now=True)
