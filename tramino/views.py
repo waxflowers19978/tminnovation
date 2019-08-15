@@ -33,19 +33,25 @@ def mypage(request):
     my_teams_id = []
     for my_team in my_teams:
         my_teams_id.append(my_team.id)
+    tab_names = []
     for i,my_team_id in enumerate(my_teams_id):
         my_teams[i].post_events =  EventPostPool.objects.all().filter(event_host_team=my_team_id)
         my_teams[i].apply_events =  EventApplyPool.objects.all().filter(guest_team_id=my_team_id)
         my_teams[i].favorite_events =  FavoriteEventPool.objects.all().filter(guest_team_id=my_team_id)
         my_teams[i].favorite_teams =  FavoriteTeamPool.objects.all().filter(guest_team_id=my_team_id)
+        my_teams[i].tab_name = 'tab' + str(i+1)# tab切り替え用
+        tab_names.append('tab' + str(i+1))# tab切り替えのためにjsに渡す変数
 
     commander_info = str(my_teams[0].organization_name) + str(my_teams[0].commander_name)
     commander_picture = my_teams[0].commander_picture
+    team_counts = len(my_teams)
     params = {
         'username': username,
         'my_teams': my_teams,
         'commander_info':commander_info,
         'commander_pic':commander_picture,
+        'tab_names':tab_names,
+        'team_counts':team_counts,
         }
     if request.method == 'POST':
         form = TeamInformationsForm(request.POST, request.FILES)
@@ -148,12 +154,19 @@ def match_detail(request, event_id):
 
 def event_post(request):
     username = request.user.username
+    my_teams = TeamInformations.objects.filter(user=request.user.id)
+    my_teams_name = []
+    for my_team in my_teams:
+        my_teams_name.append(my_team.organization_name)
     form = EventPostPoolForm()
+
     params = {
     'form': form,
     'username': username,
+    'my_teams_name':my_teams_name,
     }
     return render(request, 'tramino/event_post.html', params)
+
 
 
 def team_search(request):
@@ -239,18 +252,22 @@ def done(request):
     username = request.user.username
     if request.method == 'POST':
         if request.POST['page_name'] == 'event_post':
-
+            posted_team_name = request.POST['team_name']
             form = EventPostPoolForm(request.POST, request.FILES)
+            message = ""
             if form.is_valid():
                 event = EventPostPool()
-                event.event_host_team = form.cleaned_data['event_host_team']
+                event.event_host_team = TeamInformations.objects.get(organization_name=posted_team_name)
                 event.event_name = form.cleaned_data['event_name']
                 event.event_description = form.cleaned_data['event_description']
                 event.event_picture = form.cleaned_data['event_picture']
                 event.event_date = form.cleaned_data['event_date']
                 event.apply_deadline = form.cleaned_data['apply_deadline']
                 event.save()
-            message = 'イベントの募集を投稿しました。'
+                message = 'イベントの募集を投稿しました。'
+            else:
+                message = '投稿フォームのパラメータに不備があります。'
+                pass
 
         elif request.POST['page_name'] == 'event_apply':
 

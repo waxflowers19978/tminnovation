@@ -2,13 +2,16 @@
 {% load static %}
 {% block css %}
 <link rel='stylesheet' type='text/css' href="{% static 'tramino\mypage\css\mypage_1.css'%}" />
-
+<link rel='stylesheet' type='text/css' href="{% static 'tramino\mypage\css\mypage_2.css'%}" />
 <link href='https://fonts.googleapis.com/css?family=Oswald:300' rel='stylesheet' type='text/css'>
+
+<style>
+</style>
 
 {% endblock%}
 
 {% block content %}
-<main>
+<div class="mypage-main-box">
   <div class="mypage-main-info">
     <h1 class="mypage-title">My Page Contents</h1>
       
@@ -21,77 +24,125 @@
     <a href="" target="_blank" class="mypage-info-footer">{{ commander_info }}</a>
     
 
+  </div><!-- mypage-main-info -->
+</div><!-- mypage-main-box -->
+<!-- --------------------↓↓↓↓チームごとの募集状況、応募状況、気になるイベント、フォロー中↓↓↓↓--------------------- -->
+
+
+
+<div class="tabbox">
+  <div class="mypage-center-box">
+    <div class="tabs">
+      <div id="menu">
+        <ul>
+        {% for my_team in my_teams %}    
+          <li><button><a href="#{{ my_team.tab_name }}" class="{{ my_team.tab_name }} button" onclick="ChangeTab('{{ my_team.tab_name }}'); return false;">{{ my_team.organization_name }}{{ my_team.club_name }}  </a></button></li>
+        {% endfor %}
+        </ul> 
+      </div>
+    </div>
+    <br>
   </div>
+  <div class="mypage-sub-box">
+  {% for my_team in my_teams %}    
 
-<br><br>
+    <div id="{{ my_team.tab_name }}" class="tab"><br>
+        <h1>{{ my_team.organization_name }}{{ my_team.club_name }}({{ my_team.school_attribute }})</h1>
+        
+        <h3 class="team-action-title">募集状況</h3>
+        <table class="table">
+          <tbody>
+            {% for post_event in my_team.post_events %}
+            <tr>
+              <th><a href="{% url 'tramino:match_detail' post_event.id %}">{{ post_event.event_name }}</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      
+        <h3 class="team-action-title">応募したイベント</h3>
+        <table class="table">
+          <tbody>
+            {% for apply_event in my_team.apply_events %}
+            <tr>
+              <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}">{{ apply_event.event_post_id.event_name }}</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      
+        <h3 class="team-action-title">気になるイベント</h3>
+        <table class="table">
+          <tbody>
+          {% for favorite_event in my_team.favorite_events %}
+            <tr>
+              <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}">{{ favorite_event.event_post_id.event_name }}</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      
+      
+        <h3 class="team-action-title">フォロー中のチーム</h3>
+        <table class="table">
+          <tbody>
+          {% for favorite_team in my_team.favorite_teams %}
+            <tr>
+              <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+  {% endfor %}
+  </div><!-- mypage-sub-info -->
+</div><!--tab-box-->
+ 
 
-  <!-- <p>1 <a href="{% url 'tramino:match_search' %}">練習試合をサーチ</a></p>
-  <p>2 <a href="{% url 'tramino:event_post' %}">対戦相手を募集</a></p>
-  <p>3 <a href="{% url 'tramino:team_search' %}">チームを検索</a></p>
-  <p>4 やりとり</p>
-  <p>5 メッセージテンプレートの作成</p>
-  <p>6 募集状況の確認</p>
-  <p>7 <a href="{% url 'tramino:user_update' %}">ユーザー情報の変更</a></p>
-  <p>8 <a href="{% url 'tramino:myteams' %}">登録チーム情報の確認</a></p> -->
 
-<br><br>
---------------------↓↓↓↓チームごとの募集状況、応募状況、気になるイベント、フォロー中↓↓↓↓---------------------
-<div class="mypage-sub-info">
-  {% for my_team in my_teams %}
-  <h1>{{ my_team.organization_name }}{{ my_team.club_name }}({{ my_team.school_attribute }})</h1>
+{% endblock %}
+
+
+{% block js %}
+
+
+<!--テーブル切り替え-->
+<script type="text/javascript">
+
+var lists = {{ tab_names | safe }};
+
+  function ChangeTab(tabname) {
+     // タブメニュー実装
+  for (  var i = 0;  i < lists.length;  i++  ) {
   
-   <h3>◆募集状況</h3>
-   <table class="table">
-     <tbody>
-       {% for post_event in my_team.post_events %}
-       <tr>
-         <th><a href="{% url 'tramino:match_detail' post_event.id %}">{{ post_event.event_name }}</a></th>
-       </tr>
-       {% endfor %}
-     </tbody>
-   </table>
- 
-   <h3>◆応募したイベント</h3>
-   <table class="table">
-     <tbody>
-       {% for apply_event in my_team.apply_events %}
-       <tr>
-         <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}">{{ apply_event.event_post_id.event_name }}</a></th>
-       </tr>
-       {% endfor %}
-     </tbody>
-   </table>
- 
-   <h3>◆気になるイベント</h3>
-   <table class="table">
-     <tbody>
-     {% for favorite_event in my_team.favorite_events %}
-       <tr>
-         <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}">{{ favorite_event.event_post_id.event_name }}</a></th>
-       </tr>
-       {% endfor %}
-     </tbody>
-   </table>
- 
- 
-   <h3>◆フォロー中のチーム</h3>
-   <table class="table">
-     <tbody>
-     {% for favorite_team in my_team.favorite_teams %}
-       <tr>
-         <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
-       </tr>
-       {% endfor %}
-     </tbody>
-   </table>
- 
- 
- {% endfor %}
- 
-</div>
+  document.getElementById(( lists[ i ] )).style.display = 'none';
+  
+  }
+     // タブメニュー実装
+     document.getElementById(tabname).style.display = 'block';
 
-</main>
+  }
 
+
+</script>
+
+<script type="text/javascript">
+$(function(){
+  var btn = $('button');
+  btn.click(function(){
+    btn.removeClass('active');
+    $(this).addClass('active');
+    // console.log('done');
+
+  });
+});
+</script>
+
+
+<!-- ページを開いた際の最初に表示されるタブの選択 -->
+<script type="text/javascript">
+  ChangeTab('tab1');
+</script>
 
 
 {% endblock %}

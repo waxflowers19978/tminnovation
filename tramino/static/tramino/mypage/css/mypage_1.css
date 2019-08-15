@@ -1,5 +1,5 @@
-
-main{
+/* 主に上半分のCSS */
+.mypage-main-box{
   /* background:#1b1b2b; */
   /* background:#4b4b75; */
   background:#837fa3;
@@ -9,19 +9,19 @@ main{
 
 .mypage-main-info{
     text-align:center;
-
 }
 
 .mypage-title{
   color:#c0c0c0;
   font-weight:100;
+  font-size:36px;
 }
 
 .mypage-btn{
   color:#999;
   background:rgba(0, 0, 0, 0.5);
   padding:10px 20px;
-  font-size:12px;
+  font-size:18px;
   text-decoration:none;
   letter-spacing:2px;
   text-transform:uppercase;
@@ -36,7 +36,7 @@ main{
 }
 
 .mypage-info-footer{
-  font-size:12px;
+  font-size:18px;
   color:#fff;
   clear:both;
   display:block;
@@ -44,7 +44,7 @@ main{
   border:1px solid #fff;
   padding:5px;
   text-decoration:none;
-  width:210px;
+  width:300px;
   margin:auto;
   margin-top:30px;
 }
@@ -52,6 +52,6 @@ main{
 
 .commander-img {
     border-radius: 50%;  /* 角丸半径を50%にする(=円形にする) */
-    width:  180px;       /* ※縦横を同値に */
-    height: 180px;       /* ※縦横を同値に */
+    width:  200px;       /* ※縦横を同値に */
+    height: 200px;       /* ※縦横を同値に */
 }
