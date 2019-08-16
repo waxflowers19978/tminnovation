@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('tramino', '0009_alter_user_last_name_max_length'),
+        ('auth', '0009_alter_user_last_name_max_length'),
     ]
 
     operations = [
