@@ -10,6 +10,8 @@ urlpatterns = [
     path('mypage/', views.mypage, name='mypage'),
     path('match_search/', views.match_search, name='match_search'),
     path('match_detail/<int:event_id>/', views.match_detail, name='match_detail'),
+    path('match_detail/update/<int:pk>/', views.EventUpdateView.as_view(), name='edit_event'),
+    path('match_detail/delete/<int:pk>/', views.EventDeleteView.as_view(), name='delete_event'),
     path('event_post/', views.event_post, name='event_post'),
     path('team_search/', views.team_search, name='team_search'),
     path('team_detail/<int:team_id>/', views.team_detail, name='team_detail'),
@@ -21,6 +23,7 @@ urlpatterns = [
     path('myteams/update/<int:pk>/', views.MyTeamsUpdateView.as_view(), name='edit_myteams'),
     path('myteams/delete/<int:pk>/', views.MyTeamsDeleteView.as_view(), name='delete_myteams'),
     path('user_update/',views.UserUpdateView.as_view(), name='user_update'),    
-    path('myteams/create_past_game/<int:pk>/', views.PastGameCreateView.as_view(), name='myteams_create_past_game'),
+    path('myteams/create_past_game/<int:pk>/', views.PastGameCreateView.as_view(), name='create_past_game'),
+    path('myteams/delete_past_game/<int:pk>/', views.PastGameDeleteView.as_view(), name='delete_past_game'),
 
 ]

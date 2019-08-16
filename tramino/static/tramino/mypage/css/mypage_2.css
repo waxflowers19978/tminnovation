@@ -6,7 +6,8 @@
     padding-right:75px;
     padding-top:0px;
     font-family: 'Oswald', sans-serif;
-    background:#837fa3;
+    /* background:#837fa3; */
+    background:#ff6767;
 }
 .tabs{
 
@@ -95,5 +96,26 @@ color: #505050;
 margin-right: 8px;
 }
 
+.table a {
+font-weight:bold;
+text-decoration:none;
+}
+
+.table a:link {
+color:rgb(221, 150, 69);
+}
+
+.table a:visited {
+color:rgb(250, 112, 19);
+}
+
+.table a:hover {
+color:#FF0099;
+text-decoration:underline;
+}
+
+.table a:active {
+color:rgb(255, 211, 199);
+}
 
 

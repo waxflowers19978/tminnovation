@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 """ import models or forms """
 from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords
-from .forms import TeamInformationsForm, EventPostPoolForm
+from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm
 
 """ python code in python_file """
 from .python_file.model_form_save import *
@@ -297,7 +297,7 @@ class UserUpdateView(UpdateView):
     """ ユーザー情報を変更するためのページ """
     model = User
     fields = ('first_name', 'last_name', 'email')
-    template_name = 'tramino/user_update.html'
+    template_name = 'tramino/crud/user_update.html'
 
     def get_object(self):
         return self.request.user
@@ -359,7 +359,7 @@ class MyTeamsUpdateView(UpdateView):
     # form_class = MyTeamsUpdateForm
     fields = '__all__'# ホントは下のように一つずつ指定した方がいい
     # fields = ('first_name', 'last_name', 'email')
-    template_name = 'tramino/edit_myteams.html'
+    template_name = 'tramino/crud/myteams_edit.html'
 
     def get_success_url(self):
         return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
@@ -375,11 +375,44 @@ class MyTeamsUpdateView(UpdateView):
 class MyTeamsDeleteView(DeleteView):
     """ チームを削除するためだけのページ """
     model = TeamInformations
-    template_name = 'tramino/delete_myteams.html'
+    template_name = 'tramino/crud/myteams_delete.html'
 
     def get_success_url(self):
         #return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
         return resolve_url('tramino:myteams')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.request.user.username
+        context['username'] = username
+        return context
+
+
+class EventUpdateView(UpdateView):
+    """ イベント投稿を変更するためのページ """
+    model = EventPostPool
+    form_class = EventPostUpdateForm
+    # fields = '__all__'
+    template_name = 'tramino/crud/event_edit.html'
+
+    def get_success_url(self):
+        return resolve_url('tramino:mypage')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.request.user.username
+        context['username'] = username
+        return context
+
+    
+class EventDeleteView(DeleteView):
+    """ イベント投稿を削除するためだけのページ """
+    model = EventPostPool
+    template_name = 'tramino/crud/event_delete.html'
+
+    def get_success_url(self):
+        #return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
+        return resolve_url('tramino:mypage')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -406,4 +439,23 @@ class PastGameCreateView(CreateView):
         return context
 
 
-    
+class PastGameDeleteView(DeleteView):
+    """ チームそれぞれの対戦履歴をを削除するためだけのページ """
+    model = PastGameRecords
+    template_name = 'tramino/crud/past_game_delete.html'
+
+    def get_success_url(self):
+        #return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
+        return resolve_url('tramino:mypage')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.request.user.username
+        context['username'] = username
+        return context
+
+
+
+
+
+

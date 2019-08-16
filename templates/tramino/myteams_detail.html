@@ -79,7 +79,7 @@
   </tbody>
 </table>
 <br>
-<h2><a href="{% url 'tramino:myteams_create_past_game' teaminformations.id %}">過去の対戦履歴を追加</a></h2>
+<h2><a href="{% url 'tramino:create_past_game' teaminformations.id %}">過去の対戦履歴を追加</a></h2>
 
 <h2>登録済みの対戦履歴</h2>
 
@@ -101,6 +101,7 @@
     <td>{{ pastgamerecord.game_category }}</td>
     <td>{{ pastgamerecord.game_date }}</td>
     <td>{{ pastgamerecord.game_description }}</td>
+    <td><a href="{% url 'tramino:delete_past_game' pastgamerecord.id %}">過去の対戦履歴を削除</a></td>
   </tr>
   {% endfor %}
   </tbody>

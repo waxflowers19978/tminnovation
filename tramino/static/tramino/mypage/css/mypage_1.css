@@ -2,7 +2,8 @@
 .mypage-main-box{
   /* background:#1b1b2b; */
   /* background:#4b4b75; */
-  background:#837fa3;
+  /* background:#837fa3; */
+  background:#ff6767;
   padding:75px;
   font-family: 'Oswald', sans-serif;
 }
@@ -12,7 +13,7 @@
 }
 
 .mypage-title{
-  color:#c0c0c0;
+  color:rgb(197, 196, 196);
   font-weight:100;
   font-size:36px;
 }
