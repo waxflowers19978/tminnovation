@@ -42,9 +42,14 @@ def mypage(request):
         my_teams[i].tab_name = 'tab' + str(i+1)# tab切り替え用
         tab_names.append('tab' + str(i+1))# tab切り替えのためにjsに渡す変数
 
-    commander_info = str(my_teams[0].organization_name) + str(my_teams[0].commander_name)
-    commander_picture = my_teams[0].commander_picture
-    team_counts = len(my_teams)
+    try:
+        commander_info = str(my_teams[0].organization_name) + str(my_teams[0].commander_name)
+        commander_picture = my_teams[0].commander_picture
+        team_counts = len(my_teams)
+    except:
+        commander_info = ""
+        commander_picture = ""
+        team_counts = 0
     params = {
         'username': username,
         'my_teams': my_teams,
