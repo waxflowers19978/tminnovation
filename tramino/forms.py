@@ -46,3 +46,6 @@ class EventPostUpdateForm(forms.ModelForm):
             'apply_deadline': forms.SelectDateWidget,
         }
 
+class MessageForm(forms.Form):
+    any_message = forms.CharField(max_length = 300)
+
