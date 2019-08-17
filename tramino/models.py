@@ -35,6 +35,7 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
+from django.utils.text import Truncator
 
 
 from imagekit.models import ImageSpecField, ProcessedImageField
@@ -199,6 +200,17 @@ class EventPostPool(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.event_host_team.organization_name + ' : ' +self.event_name
+
+class EventPostComment(models.Model):
+    message = models.TextField(max_length=4000)
+    post = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='event_post_comments')
+    guest_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='commenter_team', null=True, blank=True)
+    good = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        truncated_message = Truncator(self.message)
+        return truncated_message.chars(30)
 
 class EventApplyPool(models.Model):
     event_post_id = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='event_applies')
