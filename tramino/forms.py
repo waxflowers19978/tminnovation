@@ -1,6 +1,6 @@
 # from django.contrib.admin.widgets import AdminDateWidget
 from django import forms
-from .models import TeamInformations, EventPostPool, EventApplyPool, EventPostComment
+from .models import TeamInformations, EventPostPool, EventApplyPool
 
 
 
@@ -45,15 +45,4 @@ class EventPostUpdateForm(forms.ModelForm):
             'event_date': forms.SelectDateWidget,
             'apply_deadline': forms.SelectDateWidget,
         }
-
-
-class EventPostCommentForm(forms.ModelForm):
-    """
-    EventPostComment モデルの作成、更新に使われる Django フォーム。
-    ModelForm を継承して作れば、HTMLで表示したいフィールドを
-    指定するだけで HTML フォームを作ってくれる。
-    """
-    class Meta:
-        model = EventPostComment
-        fields = ['message']
 
