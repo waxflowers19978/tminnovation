@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 
 
 """ import models or forms """
-from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords
-from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm
+from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords,EventPostComment
+from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm, MessageForm
 
 """ python code in python_file """
 from .python_file.model_form_save import *
@@ -110,6 +110,9 @@ def match_detail(request, event_id):
     username = request.user.username
     match  = EventPostPool.objects.get(id=event_id)
     my_teams = TeamInformations.objects.filter(user=request.user.id)
+    my_teams_name = []
+    for my_team in my_teams:
+        my_teams_name.append(my_team.organization_name)
     match.host_team_id = match.event_host_team.id# イベント詳細ページからチーム詳細に飛ぶためのURL生成に必要なイベントホストチームID
     applies = EventApplyPool.objects.all().filter(event_post_id=event_id)
     if request.method == 'POST':
@@ -128,6 +131,19 @@ def match_detail(request, event_id):
             else:
                 apply.save()
                 message = '気になるに追加しました。'
+        elif request.POST['page_name'] == 'comment_submit':
+            event_id = request.POST['event_id']
+            posted_team_name = request.POST['team_name']
+            print(posted_team_name)
+            print("--")
+
+            form = MessageForm()
+            comment = EventPostComment()
+            comment.message = request.POST['any_message']
+            comment.post = EventPostPool.objects.get(id=event_id)
+            comment.guest_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
+            comment.save()
+            message = 'コメントを投稿しました'
 
     my_teams_id = []
     for my_team in my_teams:
@@ -147,9 +163,12 @@ def match_detail(request, event_id):
                 my_teams[i].favo_judge = 'の気になるリストから取り消す'
             else:
                 my_teams[i].favo_judge = 'の気になるリストに追加する'
+        form = MessageForm()
         params = {
+            'form': form,
             'match': match,
             'my_teams': my_teams,
+            'my_teams_name':my_teams_name,
             'username': username,
             'applies' : applies,
             'message' : message,

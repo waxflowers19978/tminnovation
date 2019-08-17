@@ -203,12 +203,10 @@ class EventPostPool(models.Model):
 
 class EventPostComment(models.Model):
     message = models.TextField(max_length=4000)
-    post = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='post_comments')
+    post = models.ForeignKey(EventPostPool, on_delete=models.CASCADE, related_name='event_post_comments')
+    guest_team_id = models.ForeignKey(TeamInformations, on_delete=models.CASCADE, related_name='commenter_team', null=True, blank=True)
     good = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_comments')
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='+')
 
     def __str__(self):
         truncated_message = Truncator(self.message)
