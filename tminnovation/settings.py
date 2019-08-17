@@ -9,16 +9,19 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
 import os
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+AUTH_USER_MODEL = 'tramino.User'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# ログイン後トップページにリダイレクト
+LOGIN_REDIRECT_URL = '/tramino/mypage'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -43,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tramino',
     'gunicorn',
+    'django_cleanup',
+    'imagekit',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +67,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-        os.path.join('tramino', 'templates'),
+        os.path.join(BASE_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -97,14 +102,6 @@ DATABASES = {
      }
 }
 
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-"""
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -124,6 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'tramino.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -155,12 +153,16 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-# STATIC_URL = '/static/'
-STATIC_URL = STATIC_ROOT
+STATIC_URL = '/static/'
+# STATIC_URL = STATIC_ROOT
 
 DEBUG = False
 
+
 try:
-    from .local_settings import *
-except ImportError:
+    import local_settings
+    DATABASES = local_settings.databases
+    DEBUG = local_settings.debug
+    ALLOWED_HOSTS = local_settings.allowed_hosts
+except:
     pass

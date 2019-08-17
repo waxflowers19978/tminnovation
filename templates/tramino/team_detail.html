@@ -1,0 +1,132 @@
+{% extends 'tramino/base.html' %}
+
+{% block content %}
+  <h3>メッセージアラート：{{ message }}</h3>
+  <h1>チームの詳細</h1>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>チームID</th>
+        <td>{{team.id}}</td>
+      </tr>
+      <tr>
+        <th>学校名</th>
+        <td>{{team.organization_name}}</td>
+      </tr>
+      <tr>
+        <th>部活名</th>
+        <td>{{team.club_name}}</td>
+      </tr>
+      <tr>
+        <th>性別</th>
+        <td>{{team.sex}}</td>
+      </tr>
+      <tr>
+        <th>学校の属性</th>
+        <td>{{team.school_attribute}}</td>
+      </tr>
+      <tr>
+        <th>都道府県</th>
+        <td>{{team.prefectures_name}}</td>
+      </tr>
+      <tr>
+        <th>市区町村</th>
+        <td>{{team.city_name}}</td>
+      </tr>
+      <tr>
+        <th>活動場所</th>
+        <td>{{team.activity_place}}</td>
+      </tr>
+      <tr>
+        <th>チームの写真</th>
+        <!-- <td>{{team.team_picture}}</td> -->
+        <td><img src="{{ team.team_picture.url }}" width="100" height="100"/></td>
+      </tr>
+      <tr>
+        <th>URL</th>
+        <td>{{team.url}}</td>
+      </tr>
+      <tr>
+        <th>成績</th>
+        <td>{{team.achievement}}</td>
+      </tr>
+      <tr>
+        <th>活動頻度</th>
+        <td>{{team.practice_frequency}}</td>
+      </tr>
+      <tr>
+        <th>人数</th>
+        <td>{{team.number_of_members}}</td>
+      </tr>
+      <tr>
+        <th>顧問</th>
+        <td>{{team.commander_name}}</td>
+      </tr>
+      <tr>
+        <th>顧問のキャリア</th>
+        <td>{{team.commander_career}}</td>
+      </tr>
+      <tr>
+        <th>顧問の写真</th>
+        <!-- <td>{{team.commander_picture}}</td> -->
+        <td><img src="{{ team.commander_picture.thumbnail.url }}"/></td>
+      </tr>
+      <tr>
+        <th>顧問の紹介</th>
+        <td>{{team.commander_introduction}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+
+  <h2>登録済みの対戦履歴</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>対戦校</th>
+      <th>スコア</th>
+      <th>対戦区分</th>
+      <th>実施時期</th>
+      <th>説明</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for pastgamerecord in pastgamerecords %}
+    <tr>
+      <td>{{ teaminformations.organization_name }} VS {{ pastgamerecord.opponent_team_name }}</td>
+      <td>{{ pastgamerecord.my_score }} ー {{ pastgamerecord.opponent_score }}</td>
+      <td>{{ pastgamerecord.game_category }}</td>
+      <td>{{ pastgamerecord.game_date }}</td>
+      <td>{{ pastgamerecord.game_description }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <br>
+  <h2>イベントの詳細を見る</h2>
+  {% for event in events %}
+  <h3><a href="{% url 'tramino:match_detail' event.id %}">{{event.event_name}}</a></h3>
+  {% endfor %}
+
+  <h2>このチームをフォローする</h2>
+  {% for myteam in my_teams %}
+  <form action="{% url 'tramino:team_detail' team.id %}" method="POST" enctype="multipart/form-data"> 
+  <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
+  {% csrf_token %}
+  <tbody>
+    <tr>
+      <th><input class="btn btn-primary" type="submit" value="{{ myteam.organization_name }}{{ myteam.club_name }}({{ myteam.school_attribute }}){{ myteam.follow_judge }}"></th>
+      <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+    </tr>
+  </tbody>
+  <input type="hidden" name="page_name" value="team_favorite">
+  <input type="hidden" name="team_id" value={{team.id}}>
+  <input type="hidden" name="apply_team_id" value={{myteam.id}}>
+  </form>
+  {% endfor %}
+
+
+
+  <p><a href="{% url 'tramino:team_search' %}">チームを探す</a></p>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'tramino/base.html' %}
+
+{% block css %}
+<style type="text/css">
+  .card3 {
+      width: 800px;
+      height:330px;
+      margin: 20px;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 3px 6px #ccc;
+  }
+  .box3 {
+      display: flex;
+  }
+  .image3 {
+      width: 280px;
+      height: 230px;
+      margin: 20px;
+      object-fit: cover;
+      border-radius: 5px 0 0 5px;
+  }
+  .title2 {
+    font-size: 125%;
+      margin: 5px;
+      color: #444;
+  }
+  .title3 {
+      font-size: 150%;
+      margin: 10px;
+      color: #444;
+  }
+  .content3 {
+      padding: 10px;
+      color: #666;
+  }
+  </style>
+  
+{% endblock%}
+
+{% block content %}
+  <h1>試合を探す</h1>
+  <table class="table">
+    <tbody>
+    {% for event in events %}
+      <a href="{% url 'tramino:match_detail' event_id=event.id %}" style="text-decoration: none;">
+        <div class="card3">
+          <div class="box3">
+            <div>
+              <p class="title2" style="padding-left:20px; ">{{ event.event_date }}</p>
+              <p><img src="{{ event.event_picture.url }}" class="image3"></p>
+            </div>
+              <div>
+                  <div class="title3">{{ event.event_host_team.organization_name }}{{ event.event_host_team.club_name }}</div>
+                  <div class="content3" style="color:darkgray;">{{ event.event_host_team.prefectures_name }}{{ event.event_host_team.city_name }}</div>
+                  <div class="content3" style="font-size:28px;">{{ event.event_name }}</div>
+                  <div class="content3">{{ event.event_host_team.number_of_menbers }}</div>
+                  <div class="content3">{{ event.event_host_team.activity_place }}</div>
+                  <div class="content3">{{ event.event_host_team.achievement }}</div>
+                  <!-- <div class="content3">{{ event.event_description }}</div> -->
+              </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

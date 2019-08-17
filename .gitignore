@@ -1,7 +1,5 @@
-
+media
 __pycache__
 local_settings.py
 db.sqlite3
 *.py[co]
-dev_gouta.py
-dev_shunsuke.py

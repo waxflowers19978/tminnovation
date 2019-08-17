@@ -1,0 +1,109 @@
+{% extends 'tramino/base.html' %}
+
+{% block content %}
+<h3>プロフィール完成率：{{ profile_complate }}%</h3>
+<h1>チームの詳細</h1>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>チームID</th>
+      <td>{{ teaminformations.id }}</td>
+    </tr>
+    <tr>
+      <th>団体名</th>
+      <td>{{ teaminformations.organization_name }}</td>
+    </tr>
+    <tr>
+      <th>部活名</th>
+      <td>{{ teaminformations.club_name }}</td>
+    </tr>
+    <tr>
+      <th>プレイヤー</th>
+      <td>{{ teaminformations.sex }}</td>
+    </tr>
+    <tr>
+      <th>学校区分</th>
+      <td>{{ teaminformations.school_attribute }}</td>
+    </tr>
+    <tr>
+      <th>都道府県</th>
+      <td>{{ teaminformations.prefectures_name }}</td>
+    </tr>
+    <tr>
+      <th>市区町村</th>
+      <td>{{ teaminformations.city_name }}</td>
+    </tr>
+    <tr>
+      <th>活動場所</th>
+      <td>{{ teaminformations.activity_place }}</td>
+    </tr>      
+    <tr>
+      <th>チームの写真</th>
+      <!-- <td>{{match.event_picture}}</td> -->
+      <td><img src="/media/{{ teaminformations.team_picture}}" width="100" height="100"/></td>
+    </tr>
+    <tr>
+      <th>URL</th>
+      <td>{{ teaminformations.url }}</td>
+    </tr>
+    <tr>
+      <th>チーム成績</th>
+      <td>{{ teaminformations.achievement }}</td>
+    </tr>
+    <tr>
+      <th>練習頻度</th>
+      <td>{{ teaminformations.practice_frequency }}</td>
+    </tr>
+    <tr>
+      <th>プレイヤー数</th>
+      <td>{{ teaminformations.number_of_menbers }}</td>
+    </tr>
+
+    <tr>
+      <th>指導者名</th>
+      <td>{{ teaminformations.commander_name }}</td>
+    </tr>
+    <tr>
+      <th>指導者経歴</th>
+      <td>{{ teaminformations.commander_career }}</td>
+    </tr>
+    <tr>
+      <th>指導者の写真</th>
+      <td><img src="{{ teaminformations.commander_picture.url}}" width="100" height="100"/></td>
+    </tr>
+    <tr>
+      <th>指導者紹介文</th>
+      <td>{{ teaminformations.commander_introduction }}</td>
+    </tr>
+
+  </tbody>
+</table>
+<br>
+<h2><a href="{% url 'tramino:create_past_game' teaminformations.id %}">過去の対戦履歴を追加</a></h2>
+
+<h2>登録済みの対戦履歴</h2>
+
+<table>
+  <thead>
+  <tr>
+    <th>対戦校</th>
+    <th>スコア</th>
+    <th>対戦区分</th>
+    <th>実施時期</th>
+    <th>説明</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for pastgamerecord in pastgamerecords %}
+  <tr>
+    <td>{{ teaminformations.organization_name }} VS {{ pastgamerecord.opponent_team_name }}</td>
+    <td>{{ pastgamerecord.my_score }} ー {{ pastgamerecord.opponent_score }}</td>
+    <td>{{ pastgamerecord.game_category }}</td>
+    <td>{{ pastgamerecord.game_date }}</td>
+    <td>{{ pastgamerecord.game_description }}</td>
+    <td><a href="{% url 'tramino:delete_past_game' pastgamerecord.id %}">過去の対戦履歴を削除</a></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

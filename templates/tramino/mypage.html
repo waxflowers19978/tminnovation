@@ -1,0 +1,148 @@
+{% extends 'tramino/base.html' %}
+{% load static %}
+{% block css %}
+<link rel='stylesheet' type='text/css' href="{% static 'tramino\mypage\css\mypage_1.css'%}" />
+<link rel='stylesheet' type='text/css' href="{% static 'tramino\mypage\css\mypage_2.css'%}" />
+<link href='https://fonts.googleapis.com/css?family=Oswald:300' rel='stylesheet' type='text/css'>
+
+<style>
+</style>
+
+{% endblock%}
+
+{% block content %}
+<div class="mypage-main-box">
+  <div class="mypage-main-info">
+    <h1 class="mypage-title">My Page Contents</h1>
+      
+    <a href="{% url 'tramino:myteams' %}" class="mypage-btn">登録チーム情報の確認</a>
+    <a href="#" class="mypage-btn">メッセージ</a>
+    <a href="#" class="mypage-btn">メッセージテンプレートの作成</a>
+    <a href="{% url 'tramino:user_update' %}" class="mypage-btn">ユーザー情報変更</a>
+    <br><br><br><br>
+    <div><img src="{{ commander_pic.url }}" class="commander-img"/></div>    
+    <a href="" target="_blank" class="mypage-info-footer">{{ commander_info }}</a>
+    
+
+  </div><!-- mypage-main-info -->
+</div><!-- mypage-main-box -->
+<!-- --------------------↓↓↓↓チームごとの募集状況、応募状況、気になるイベント、フォロー中↓↓↓↓--------------------- -->
+
+
+
+<div class="tabbox">
+  <div class="mypage-center-box">
+    <div class="tabs">
+      <div id="menu">
+        <ul>
+        {% for my_team in my_teams %}    
+          <li><button><a href="#{{ my_team.tab_name }}" class="{{ my_team.tab_name }} button" onclick="ChangeTab('{{ my_team.tab_name }}'); return false;">{{ my_team.organization_name }}{{ my_team.club_name }}  </a></button></li>
+        {% endfor %}
+        </ul> 
+      </div>
+    </div>
+    <br>
+  </div>
+  <div class="mypage-sub-box">
+  {% for my_team in my_teams %}    
+
+    <div id="{{ my_team.tab_name }}" class="tab"><br>
+        <h1>{{ my_team.organization_name }}{{ my_team.club_name }}({{ my_team.school_attribute }})</h1>
+        
+        <h3 class="team-action-title">募集状況</h3>
+        <table class="table">
+          <tbody>
+            {% for post_event in my_team.post_events %}
+            <tr>
+              <th><a href="{% url 'tramino:match_detail' post_event.id %}" style="text-decoration: none;">{{ post_event.event_name }}</a><a href="{% url 'tramino:edit_event' post_event.id %}" style="color: black;">更新する</a>　<a href="{% url 'tramino:delete_event' post_event.id %}" style="color: black;">削除する</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      
+        <h3 class="team-action-title">応募したイベント</h3>
+        <table class="table">
+          <tbody>
+            {% for apply_event in my_team.apply_events %}
+            <tr>
+              <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}" style="text-decoration: none;">{{ apply_event.event_post_id.event_name }}</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      
+        <h3 class="team-action-title">気になるイベント</h3>
+        <table class="table">
+          <tbody>
+          {% for favorite_event in my_team.favorite_events %}
+            <tr>
+              <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}" style="text-decoration: none;">{{ favorite_event.event_post_id.event_name }}</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      
+      
+        <h3 class="team-action-title">フォロー中のチーム</h3>
+        <table class="table">
+          <tbody>
+          {% for favorite_team in my_team.favorite_teams %}
+            <tr>
+              <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}" style="text-decoration: none;">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+  {% endfor %}
+  </div><!-- mypage-sub-info -->
+</div><!--tab-box-->
+ 
+
+
+{% endblock %}
+
+
+{% block js %}
+
+
+<!--テーブル切り替え-->
+<script type="text/javascript">
+
+var lists = {{ tab_names | safe }};
+
+  function ChangeTab(tabname) {
+     // タブメニュー実装
+  for (  var i = 0;  i < lists.length;  i++  ) {
+  
+  document.getElementById(( lists[ i ] )).style.display = 'none';
+  
+  }
+     // タブメニュー実装
+     document.getElementById(tabname).style.display = 'block';
+
+  }
+
+
+</script>
+
+<script type="text/javascript">
+$(function(){
+  var btn = $('button');
+  btn.click(function(){
+    btn.removeClass('active');
+    $(this).addClass('active');
+    // console.log('done');
+
+  });
+});
+</script>
+
+
+<!-- ページを開いた際の最初に表示されるタブの選択 -->
+<script type="text/javascript">
+  ChangeTab('tab1');
+</script>
+
+
+{% endblock %}

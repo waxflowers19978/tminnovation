@@ -1,0 +1,66 @@
+{% extends 'tramino/base.html' %}
+
+{% block css %}
+<style type="text/css">
+  .card2 {
+      width: 700px;
+      margin: 20px;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 3px 6px #ccc;
+  }
+  .box2 {
+      display: flex;
+  }
+  .icon2 {
+      width: 60px;
+      height: 60px;
+      margin: 10px;
+      border-radius: 24px;
+      object-fit: cover;
+  }
+  .name2 {
+      font-size: 100%;
+      margin-bottom: 10px;
+      color: #888;
+  }
+  .image2 {
+      width: 40%;
+      height: 150px;
+      object-fit: cover;
+  }
+  .title2 {
+      font-size: 150%;
+      margin: 10px 0;
+      color: #444;
+  }
+  .content2 {
+      padding: 10px;
+      color: #666;
+  }
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+  <h1>チームを探す</h1>
+{% for team in teams %}
+  <a href="{% url 'tramino:team_detail' team_id=team.id %}" style="text-decoration: none;">
+    <div class="card2">
+      <div class="box2">
+          <img src="{{team.commander_picture.url}}" class="icon2">
+          <div>
+            <div class="title2">{{ team.organization_name }}{{ team.club_name }}({{ team.school_attribute }})</div>
+          </div>
+      </div>
+      <img src="{{ team.team_picture.url }}" class="image2">
+      <p class="content2">##########</p>
+    </div>
+  </a>
+{% endfor %}
+
+
+
+{% endblock %}

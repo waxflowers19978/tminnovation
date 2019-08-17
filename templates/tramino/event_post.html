@@ -1,0 +1,75 @@
+{% extends 'tramino/base.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+
+  <h1>イベント投稿</h1>
+  <table class="table">
+    <form action="{% url 'tramino:done' %}" name="form1" method="POST" enctype="multipart/form-data"> 
+    {% csrf_token %}
+
+      <select name="teamnamechoice" id="name">
+        {% for my_team_name in my_teams_name %}
+          <option name="my_team_name" value="{{ my_team_name }}">{{ my_team_name }}</option>
+        {% endfor %}
+      </select>
+
+      <tbody>
+      <tr>
+        <th>イベント名※</th>
+        <td>{{ form.event_name }}</td>
+      </tr>
+      <tr>
+        <th>イベントについて※</th>
+        <td>{{ form.event_description }}</td>
+      </tr>
+      <tr>
+        <th>イベントの画像※</th>
+        <td>{{ form.event_picture }}</td>
+      </tr>
+      <tr>
+        <th>イベントの日付※</th>
+        <td>{{ form.event_date }}</td>
+      </tr>
+      <tr>
+        <th>申し込み期限※</th>
+        <td>{{ form.apply_deadline }}</td>
+      </tr>
+      <tr>
+        <th><input class="btn btn-primary" type="submit" value="Submit" onclick="clickBtn1()"/></th>
+        <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+      </tr>
+    </tbody>
+    <input type="hidden" name="page_name" value="event_post">
+    <input type="hidden" id="team_name" name="team_name" value="">
+    </form>
+  </table>
+{% endblock %}
+
+{% block js %}
+<script>
+  function clickBtn1(){
+  
+    const teamnamechoice = document.form1.teamnamechoice;
+  
+    // 値(数値)を取得
+    const num = teamnamechoice.selectedIndex;
+    //const num = document.form1.color1.selectedIndex;
+  
+    // 値(数値)から値(value値)を取得
+    const str = teamnamechoice.options[num].value;
+    //const str = document.form1.color1.options[num].value;
+  
+    document.getElementById("team_name").value = str;
+    console.log("done"); 
+  }
+  </script>
+
+  
+{% endblock %}
+
+
