@@ -3,7 +3,7 @@
 {% block css %}
 <style type="text/css">
   .card2 {
-      width: 900px;
+      width: 700px;
       margin: 20px;
       border-radius: 5px;
       background-color: #fff;
@@ -13,8 +13,8 @@
       display: flex;
   }
   .icon2 {
-      width: 85px;
-      height: 85px;
+      width: 60px;
+      height: 60px;
       margin: 10px;
       border-radius: 24px;
       object-fit: cover;
@@ -25,8 +25,8 @@
       color: #888;
   }
   .image2 {
-      width: 100%;
-      height: 550px;
+      width: 40%;
+      height: 150px;
       object-fit: cover;
   }
   .title2 {
@@ -46,19 +46,6 @@
 
 {% block content %}
   <h1>チームを探す</h1>
-  <table class="table">
-    <tbody>
-    {% for team in teams %}
-      <tr>
-        <th>{{ team.id }}</th>
-        <td><td><a href="{% url 'tramino:team_detail' team_id=team.id %}">{{team.organization_name}}</a></td></td>
-        <td>{{ team.club_name }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-
 {% for team in teams %}
   <a href="{% url 'tramino:team_detail' team_id=team.id %}" style="text-decoration: none;">
     <div class="card2">
@@ -66,7 +53,6 @@
           <img src="{{team.commander_picture.url}}" class="icon2">
           <div>
             <div class="title2">{{ team.organization_name }}{{ team.club_name }}({{ team.school_attribute }})</div>
-              <p class="name2"><a href="{% url 'tramino:team_detail' team_id=team.id %}" style="text-decoration: none;">{{ match.event_host_team.organization_name }}{{ match.event_host_team.club_name }}({{ match.event_host_team.school_attribute }})</a></p>
           </div>
       </div>
       <img src="{{ team.team_picture.url }}" class="image2">

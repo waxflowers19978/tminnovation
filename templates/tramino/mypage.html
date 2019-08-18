@@ -54,7 +54,7 @@
           <tbody>
             {% for post_event in my_team.post_events %}
             <tr>
-              <th><a href="{% url 'tramino:match_detail' post_event.id %}">{{ post_event.event_name }}</a></th>
+              <th><a href="{% url 'tramino:match_detail' post_event.id %}" style="text-decoration: none;">{{ post_event.event_name }}</a><a href="{% url 'tramino:edit_event' post_event.id %}" style="color: black;">更新する</a>　<a href="{% url 'tramino:delete_event' post_event.id %}" style="color: black;">削除する</a></th>
             </tr>
             {% endfor %}
           </tbody>
@@ -65,7 +65,7 @@
           <tbody>
             {% for apply_event in my_team.apply_events %}
             <tr>
-              <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}">{{ apply_event.event_post_id.event_name }}</a></th>
+              <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}" style="text-decoration: none;">{{ apply_event.event_post_id.event_name }}</a></th>
             </tr>
             {% endfor %}
           </tbody>
@@ -76,7 +76,7 @@
           <tbody>
           {% for favorite_event in my_team.favorite_events %}
             <tr>
-              <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}">{{ favorite_event.event_post_id.event_name }}</a></th>
+              <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}" style="text-decoration: none;">{{ favorite_event.event_post_id.event_name }}</a></th>
             </tr>
             {% endfor %}
           </tbody>
@@ -88,7 +88,7 @@
           <tbody>
           {% for favorite_team in my_team.favorite_teams %}
             <tr>
-              <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
+              <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}" style="text-decoration: none;">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
             </tr>
             {% endfor %}
           </tbody>

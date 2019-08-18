@@ -149,7 +149,13 @@ class TeamInformations(models.Model):
     prefectures_name = models.CharField(max_length = 30, choices=prefectures_list)
     city_name = models.CharField(max_length = 50, null=True, blank=True)
     activity_place = models.CharField(max_length = 30)
-    team_picture = models.ImageField(upload_to=get_team, default='SOME STRING')# SOME STRINGはNO CHANGEでお願い
+    # team_picture = models.ImageField(upload_to=get_team, default='SOME STRING')# SOME STRINGはNO CHANGEでお願い
+    team_picture = ProcessedImageField(upload_to=get_team,
+                                            processors=[Transpose(),ResizeToFill(800, 350)],
+                                            format='JPEG',
+                                            options={'quality': 60},
+                                            default='SOME STRING')# SOME STRINGはNO CHANGEでお願い
+
     url = models.CharField(max_length = 200, null=True, blank=True)
     achievement = models.CharField(max_length = 30, choices=achievement_list, null=True, blank=True)
     practice_frequency = models.CharField(max_length = 30, choices=practice_frequency_list, null=True, blank=True)

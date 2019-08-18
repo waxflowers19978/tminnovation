@@ -31,3 +31,18 @@ class EventPostPoolForm(forms.Form):
     apply_deadline = forms.DateField(required=True,widget=forms.DateInput(attrs={"type": "date"}),input_formats=['%Y-%m-%d'])
 
     # post_by = forms.ChoiceField(label=u'投稿元のチーム', choices=[])
+
+class EventPostUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = EventPostPool
+        fields = ('event_name','event_description','event_picture','event_date','apply_deadline')
+
+        # fields = '__all__'
+        widgets = {
+            # 'event_date': AdminDateWidget(),
+            # 'apply_deadline': AdminDateWidget(),
+            'event_date': forms.SelectDateWidget,
+            'apply_deadline': forms.SelectDateWidget,
+        }
+
