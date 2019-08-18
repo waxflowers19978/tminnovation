@@ -98,30 +98,11 @@
   <p class="content2">{{match.event_description}}</p>
   <div class="title2" style="width:800px;text-align:left;">
   <div style="text-align:right;float:right;">あと〇〇日！！</div>申し込み期限 : {{match.apply_deadline}}</div>
-  <div class="title5">応募・コメント〇〇件</div>
-  <div class="comment-box" style="padding-left: 50px;">
-    {% for post_comment in match.event_post_comments.all %}
-    <div class="card5">
-      <div class="box5">
-          <img src="{{post_comment.guest_team_id.commander_picture.url}}" class="icon5">
-          <div>
-            <div class="title5">{{ post_comment.guest_team_id.organization_name }}{{ post_comment.guest_team_id.club_name }}({{ post_comment.guest_team_id.school_attribute }})</div>
-          </div>
-      </div>
-      <p class="content5">{{ post_comment.message }}</p>
-      <small class="content5">{{ post_comment.created_at }}</small>
-    </div>  
-  </div>
-{% endfor %}
 
 </div>
   <!-- <h2><a href="{% url 'tramino:team_detail' match.host_team_id %}">チームの詳細を見る</a></h2> -->
-
-
 <br>
 <br>
-
-
 
   <h2>応募済みのチーム</h2>
   <table class="table">
