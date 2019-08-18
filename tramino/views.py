@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 
 """ import models or forms """
-from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords,EventPostComment
+from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords
 from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm, MessageForm
 
 """ python code in python_file """
@@ -131,19 +131,6 @@ def match_detail(request, event_id):
             else:
                 apply.save()
                 message = '気になるに追加しました。'
-        elif request.POST['page_name'] == 'comment_submit':
-            event_id = request.POST['event_id']
-            posted_team_name = request.POST['team_name']
-            print(posted_team_name)
-            print("--")
-
-            form = MessageForm()
-            comment = EventPostComment()
-            comment.message = request.POST['any_message']
-            comment.post = EventPostPool.objects.get(id=event_id)
-            comment.guest_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
-            comment.save()
-            message = 'コメントを投稿しました'
 
     my_teams_id = []
     for my_team in my_teams:
