@@ -41,7 +41,7 @@
         transform: translateY(-50%);*/
     }
     /*メニュー*/
-    .header-menu{ 
+    .header-menu{
         float: right;
         line-height: 80px; /*headerの高さと同じに*/
     }
@@ -76,16 +76,16 @@
     <!-- logo画像 -->
     <h1 class="logo">
         <a href="{% url 'tramino:mypage' %}"><img src="{% static 'tramino\base\images\tramino_logo.png'%}" class="logo-image"></a>
-    </h1>    
+    </h1>
 
     <!-- メニュー -->
-    <div class="header-menu">        
+    <div class="header-menu">
         <ul>
             <li><a href="{% url 'tramino:match_search' %}">ゲームを検索</a></li>
             <li><a href="{% url 'tramino:team_search' %}">チームを検索</a></li>
             <li><a href="{% url 'tramino:event_post' %}">対戦相手を募集</a></li>
             <!-- <li><a href="">menu4</a></li> -->
-            <li><a href=""><img src="{% static 'tramino\base\images\message_icon.svg'%}" class="message-image"></a></li>
+            <li><a href="{% url 'tramino:message_home' %}"><img src="{% static 'tramino\base\images\message_icon.svg'%}" class="message-image"></a></li>
         </ul>
     </div>
   </header>
@@ -96,4 +96,3 @@
 </html>
 
 {% block js %}{% endblock %}
-

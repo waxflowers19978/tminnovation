@@ -1,0 +1,23 @@
+{% extends 'tramino/base.html' %}
+
+{% block css %}
+
+
+{% endblock%}
+
+{% block content %}
+
+  <h1>メッセージ</h1>
+
+  <hr>
+  <div id='send'>
+    <form method="post" action="{% url 'tramino:message_home' %}">
+      {% csrf_token %}
+      <input type="text" name="message_text">
+      <input type="submit" value="送信する">
+      <input type="reset" value="リセット">
+    </form>
+  </div>
+
+
+{% endblock %}

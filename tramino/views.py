@@ -11,6 +11,7 @@ from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm,
 
 """ python code in python_file """
 from .python_file.model_form_save import *
+from .python_file import message
 
 
 """ 08/10以降追加 """
@@ -226,7 +227,7 @@ def team_detail(request, team_id):
                 apply.save()
                 message = 'チームをフォローしました。'
 
-    
+
     username = request.user.username
     team  = TeamInformations.objects.get(id=team_id)
     my_teams = TeamInformations.objects.filter(user=request.user.id)
@@ -251,7 +252,7 @@ def team_detail(request, team_id):
                 my_teams[i].follow_judge = 'からのフォローを解除する'
             else:
                 my_teams[i].follow_judge = 'からフォローする'
-            
+
         params = {
             'team': team,
             'my_teams': my_teams,
@@ -428,7 +429,7 @@ class EventUpdateView(UpdateView):
         context['username'] = username
         return context
 
-    
+
 class EventDeleteView(DeleteView):
     """ イベント投稿を削除するためだけのページ """
     model = EventPostPool
@@ -480,6 +481,15 @@ class PastGameDeleteView(DeleteView):
 
 
 
+def message_home(request):
+    message_redis = MessageRedis()
+    params = {
+        'aiueo':'aiueo',
+    }
+    return render(request, 'tramino/message_home.html', params)
 
 
-
+def message_room(request, room_name):
+    params = {
+    }
+    return render(request, 'tramino/message_room.html', params)
