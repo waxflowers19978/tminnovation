@@ -20,12 +20,20 @@ class MessageRedis():
         dict_message = self.make_message_to_dict(grant_user_id, message)
         json_dict_message = self.make_message_json_dump(dict_message)
 
-        #save
+        #save_message
         redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
         redis_db_0.lpush(save_key,  json_dict_message)
 
-        #history
-        self.save_message_history(save_key)
+        #save_history
+        user_id_1, user_id_2 = save_key.split('_')
+
+        user_1_history = self.get_message_history(user_id_1)
+        new_message_history_list_1 = self.new_message_history(user_1_history, save_key)
+        self.save_message_history(user_id_1, new_message_history_list_1)
+
+        user_2_history = self.get_message_history(user_id_2)
+        new_message_history_list_2 = self.new_message_history(user_2_history, save_key)
+        self.save_message_history(user_id_2, new_message_history_list_2)
         return
 
     """redisを参照"""
@@ -44,14 +52,29 @@ class MessageRedis():
         message_list = self.make_message_json_loads(json_message_list)
         return message_list
 
+    """"""
+    def get_message_history(self, user_id):
+        string_user_id = str(user_id)
+        redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        message_history_list= redis_db_1.lrange(string_user_id, 0 , -1)
+        return message_history_list
 
     """history"""
-    def save_message_history(self, save_key):
+    def save_message_history(self, user_id, message_history_list):
         redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
-        user_id_1, user_id_2 = save_key.split('_')
-        redis_db_1.lpush(user_id_1, save_key)
-        redis_db_1.lpush(user_id_2, save_key)
+        result = redis_db_1.delete(user_id)
+        for history in message_history_list:
+            redis_db_1.rpush(user_id, history)
         return
+
+
+    def new_message_history(self, old_message_history_list, save_key):
+        bytes_save_key = save_key.encode('utf-8')
+        if bytes_save_key in old_message_history_list:
+            old_message_history_list.remove(bytes_save_key)
+        old_message_history_list.insert(0, save_key)
+        new_message_history_list = old_message_history_list
+        return new_message_history_list
 
     def room_name_to_ord_user_id(self, room_name):
         decoded_room_name = base64.b64decode(room_name)

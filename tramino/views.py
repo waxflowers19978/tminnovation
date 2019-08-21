@@ -482,7 +482,10 @@ class PastGameDeleteView(DeleteView):
 
 
 def message_home(request):
-    message_redis = MessageRedis()
+    user_id = request.user.id
+    message_redis = message.MessageRedis()
+    message_history_list = message_redis.get_message_history(user_id)
+    print(message_history_list)
     params = {
         'aiueo':'aiueo',
     }
