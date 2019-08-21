@@ -1,22 +1,37 @@
 {% extends 'tramino/base.html' %}
+{% load static%}
 
 {% block css %}
-
+  <body link="000000" vlink="#000000" alink="#000000">
+  <link rel='stylesheet' type='text/css' href="{% static 'tramino\mypage\css\message_home.css'%}" />
 {% endblock%}
 
 {% block content %}
-
-  <h1>メッセージ一覧</h1>
-
-
-  <hr>
-  {% for i in message_user_list %}
-    <br>
-    <p><a href="{% url 'tramino:message_room' i.room_name %}">{{ i.oponent_id }}</a></p>
-    <p>{{ i.latest_message.message }} || {{ i.latest_message.timestanp }}</p>
-    <p>{{ i.oponent_teams }}</p>
-    <br>
-  {% endfor %}
+  <div id='content'>
+    <div id='name'>
+      <h1>メッセージ一覧</h1>
+    </div>
+    <hr>
+    {% for message_user in message_user_list %}
+      <div class='message-list'>
+        <a href="{% url 'tramino:message_room' message_user.room_name %}">
+          <div class='team_name'>
+            {% for team in message_user.oponent_teams %}
+              <span>{{ team.organization_name }}</span>
+            {% endfor %}
+          </div>
+          <div class='message'>
+            <div class='message-sentence'>
+              {{ message_user.latest_message.message }}
+            </div>
+            <div class='message-timestanp'>
+              <span>{{ message_user.latest_message.timestanp }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
 
 
 {% endblock %}

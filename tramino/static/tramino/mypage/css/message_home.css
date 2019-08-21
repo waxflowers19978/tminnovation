@@ -1,0 +1,44 @@
+
+
+#name {
+  text-align: center;
+}
+
+#content {
+  border: 1px solid black;
+  height: auto;
+  width: 400px;
+  margin: 20px auto;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgb(100, 100, 100);
+}
+
+.message-list a {
+  text-decoration: none;
+}
+
+.team_name {
+  padding-left: 10px;
+  /* border: 1px solid green; */
+  /* height: 10px; */
+}
+
+.team_name span {
+  font-size:8px;
+  line-height:10px;
+}
+
+.message {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.message span {
+  font-size: 3px;
+  color: rgb(100, 100, 100);
+}

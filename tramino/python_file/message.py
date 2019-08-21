@@ -153,10 +153,8 @@ class MessageRedis():
         return oponent_id
 
     def get_oponent_teams(self, user_id):
-        # int_str_id = int(user_id)
-        # oponent_teams = TeamInformations.objects.filter(user=int_str_id)
-        # print(oponent_teams)
-        oponent_teams = '立教大学'
+        int_str_id = int(user_id)
+        oponent_teams = TeamInformations.objects.filter(user=int_str_id)
         return oponent_teams
 
     def save_key_to_room_name(self, save_key):
