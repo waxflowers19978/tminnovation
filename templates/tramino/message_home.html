@@ -14,6 +14,7 @@
     <br>
     <p><a href="{% url 'tramino:message_room' i.room_name %}">{{ i.oponent_id }}</a></p>
     <p>{{ i.latest_message.message }} || {{ i.latest_message.timestanp }}</p>
+    <p>{{ i.oponent_teams }}</p>
     <br>
   {% endfor %}
 

@@ -1,3 +1,7 @@
+from django.contrib.auth.models import User
+
+from ..models import TeamInformations
+
 import redis
 import datetime
 import json
@@ -119,10 +123,12 @@ class MessageRedis():
         for save_key in message_history_list:
             history_dict = {}
             oponent_id = self.get_oponent_id(save_key, user_id)
+            oponent_teams = self.get_oponent_teams(oponent_id)
             room_name = self.save_key_to_room_name(save_key)
             latest_message = self.get_latest_message(save_key)
 
             history_dict['oponent_id'] = oponent_id
+            history_dict['oponent_teams'] = oponent_teams
             history_dict['history'] = save_key
             history_dict['room_name'] = room_name
             history_dict['latest_message'] = latest_message
@@ -146,6 +152,12 @@ class MessageRedis():
 
         return oponent_id
 
+    def get_oponent_teams(self, user_id):
+        # int_str_id = int(user_id)
+        # oponent_teams = TeamInformations.objects.filter(user=int_str_id)
+        # print(oponent_teams)
+        oponent_teams = '立教大学'
+        return oponent_teams
 
     def save_key_to_room_name(self, save_key):
         user_id_1, user_id_2 = str(save_key, 'utf-8').split('_')
