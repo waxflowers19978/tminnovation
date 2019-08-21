@@ -8,8 +8,14 @@
 
   <h1>メッセージ一覧</h1>
 
-  <p><a href="{% url 'tramino:message_room' aiueo %}">user A</a></p>
-  <p><a href="">user B</a></p>
+
+  <hr>
+  {% for i in message_user_list %}
+    <br>
+    <p><a href="{% url 'tramino:message_room' i.room_name %}">{{ i.oponent_id }}</a></p>
+    <p>{{ i.latest_message.message }} || {{ i.latest_message.timestanp }}</p>
+    <br>
+  {% endfor %}
 
 
 {% endblock %}

@@ -52,12 +52,6 @@ class MessageRedis():
         message_list = self.make_message_json_loads(json_message_list)
         return message_list
 
-    """"""
-    def get_message_history(self, user_id):
-        string_user_id = str(user_id)
-        redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
-        message_history_list= redis_db_1.lrange(string_user_id, 0 , -1)
-        return message_history_list
 
     """history"""
     def save_message_history(self, user_id, message_history_list):
@@ -116,3 +110,56 @@ class MessageRedis():
     def make_message_json_loads(self, json_message_list):
         message_list = [json.loads(message) for message in json_message_list]
         return message_list
+
+    """一覧"""
+    def get_message_user_list(self, user_id):
+        message_user_list = []
+
+        message_history_list = self.get_message_history(user_id)
+        for save_key in message_history_list:
+            history_dict = {}
+            oponent_id = self.get_oponent_id(save_key, user_id)
+            room_name = self.save_key_to_room_name(save_key)
+            latest_message = self.get_latest_message(save_key)
+
+            history_dict['oponent_id'] = oponent_id
+            history_dict['history'] = save_key
+            history_dict['room_name'] = room_name
+            history_dict['latest_message'] = latest_message
+            message_user_list.append(history_dict)
+
+        return message_user_list
+
+    def get_message_history(self, user_id):
+        string_user_id = str(user_id)
+        redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        message_history_list= redis_db_1.lrange(string_user_id, 0 , -1)
+        return message_history_list
+
+    def get_oponent_id(self, save_key, user_id):
+        string_user_id = str(user_id)
+        user_id_1, user_id_2 = str(save_key, 'utf-8').split('_')
+        if string_user_id == user_id_1:
+            oponent_id = user_id_2
+        else:
+            oponent_id = user_id_1
+
+        return oponent_id
+
+
+    def save_key_to_room_name(self, save_key):
+        user_id_1, user_id_2 = str(save_key, 'utf-8').split('_')
+        ord_id_1 = ''.join([str(ord(i)) for i in user_id_1])
+        ord_id_2 = ''.join([str(ord(i)) for i in user_id_2])
+        ord_save_key = ord_id_1 + '_' + ord_id_2
+        ord_save_key = ord_save_key.encode('utf-8')
+        room_name = base64.b64encode(ord_save_key)
+        room_name = str(room_name, 'utf-8')
+        return room_name
+
+    def get_latest_message(self, save_key):
+        redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        latest_json_encoded_message = redis_db_0.lindex(save_key, 0)
+        latest_json_message = latest_json_encoded_message.decode('utf-8')
+        latest_message = json.loads(latest_json_message)
+        return latest_message
