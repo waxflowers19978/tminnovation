@@ -95,6 +95,7 @@ def match_search(request):
     for i,my_team_id in enumerate(my_teams_id):
         event_post_pool = event_post_pool.exclude(event_host_team=my_team_id)
 
+    import json
     params = {
         'events': event_post_pool,
         'username': username,
@@ -301,8 +302,25 @@ def done(request):
     return redirect('tramino:mypage')
 
 
-def logout(request):
-    return render(request, 'tramino/logout.html')
+
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import (
+    LoginView, LogoutView
+)
+from django.views import generic
+from .forms import LoginForm
+
+
+class Login(LoginView):
+    """ログインページ"""
+    form_class = LoginForm
+    template_name = 'tramino/login.html'
+
+
+class Logout(LoginRequiredMixin, LogoutView):
+    """ログアウトページ"""
+    template_name = 'tramino/mypage.html'
 
 
 class UserUpdateView(UpdateView):

@@ -35,7 +35,7 @@
       color: #666;
   }
   </style>
-  
+
 {% endblock%}
 
 {% block content %}
@@ -77,6 +77,7 @@
         </tr>
     </table>
   </div>
+
   <br><br><br><br><br>
 
 
@@ -106,21 +107,6 @@
                   name: '佐藤二郎',
                   email: 'satoujiro@example.com'
               },
-              {
-                  id: 3,
-                  name: '田中三郎',
-                  email: 'tanakasaburo@example.com'
-              },
-              {
-                  id: 4,
-                  name: '山本四郎',
-                  email: 'yamamotoshiro@example.com'
-              },
-              {
-                  id: 5,
-                  name: '高橋五郎',
-                  email: 'takahashigoro@example.com'
-              },
           ]
       },
       computed: {
@@ -146,34 +132,10 @@
           }
 
       }
-      
+
   });
 
 </script>
 
-
-<script>
-const items = [
-　{'Id':'1', 'Name':'Tanaka', 'Age':'20'},
-  {'Id':'2', 'Name':'Suzuki', 'Age':'30'},
-  {'Id':'3', 'Name':'Takahasi', 'Age':'40'}
-];
-
-const ids = [
-　'1', '2', '3'
-];
-
-const ages = [
-　'20', '30', '40'
-];
-
-new Vue({
-  el: '#app',
-  data: {
-    items: items
-});
-
-
-</script>
 
 {% endblock%}

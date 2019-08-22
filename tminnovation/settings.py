@@ -23,6 +23,9 @@ MEDIA_URL = '/media/'
 # ログイン後トップページにリダイレクト
 LOGIN_REDIRECT_URL = '/tramino/mypage'
 
+LOGIN_URL = 'tramino:login'
+LOGIN_REDIRECT_URL = 'tramino:mypage'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 

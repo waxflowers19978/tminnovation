@@ -166,7 +166,7 @@ class TeamInformations(models.Model):
     #position = models.CharField(max_length = 30)
     commander_career = models.CharField(max_length = 400, null=True, blank=True)
     # commander_picture = models.ImageField(upload_to=get_commander, default='SOME STRING')# SOME STRINGはNO CHANGEでお願い
-    commander_picture = ProcessedImageField(upload_to=get_commander, 
+    commander_picture = ProcessedImageField(upload_to=get_commander,
                                             processors=[Transpose(),ResizeToFill(200, 200)],
                                             format='JPEG',
                                             options={'quality': 60},

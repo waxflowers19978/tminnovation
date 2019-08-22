@@ -2,6 +2,23 @@
 from django import forms
 from .models import TeamInformations, EventPostPool, EventApplyPool
 
+from django.contrib.auth.forms import AuthenticationForm
+
+
+class LoginForm(AuthenticationForm):
+    """ログインフォーム"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = field.label
+# class LoginForm(AuthenticationForm):
+#     def __init__(self, *args, **kwargs):
+#        super().__init__(*args, **kwargs)
+#        #htmlの表示を変更可能にします
+#        self.fields['email'].widget.attrs['class'] = 'form-control'
+#        self.fields['password'].widget.attrs['class'] = 'form-control'
 
 
 

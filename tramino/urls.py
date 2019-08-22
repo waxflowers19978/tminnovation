@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.urls import path
+from django.urls import path, include
 from . import views
 # from tminnovation import settings
 
@@ -17,7 +17,9 @@ urlpatterns = [
     path('team_detail/<int:team_id>/', views.team_detail, name='team_detail'),
     path('create/', views.create, name='create'),
     path('done/', views.done, name='done'),
-    path('logout/', views.logout, name='logout'),
+    # path('logout/', views.logout, name='logout'),
+    path('login/', views.Login.as_view(), name='login'),
+    path('logout/', views.Logout.as_view(), name='logout'),
     path('myteams/',views.MyTeamsListView.as_view(), name='myteams'),
     path('myteams/detail/<int:pk>/', views.MyTeamsDetailView.as_view(), name='myteams_detail'),
     path('myteams/update/<int:pk>/', views.MyTeamsUpdateView.as_view(), name='edit_myteams'),
