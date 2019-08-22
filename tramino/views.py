@@ -4,10 +4,17 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import (
+    LoginView, LogoutView
+)
+
+
 
 """ import models or forms """
 from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords
 from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm, MessageForm, PastGameRecordsForm
+from .forms import LoginForm
 
 """ python code in python_file """
 from .python_file.model_form_save import *
@@ -17,6 +24,7 @@ from .python_file import message
 """ 08/10以降追加 """
 from django.shortcuts import get_object_or_404, resolve_url
 
+from django.views import generic
 from django.views.generic import ListView, UpdateView, DetailView, UpdateView, DeleteView, CreateView
 from .python_file.profile_complate_percent import *
 
@@ -24,8 +32,31 @@ from .python_file.profile_complate_percent import *
 
 
 
+class Login(LoginView):
+    """ログインページ"""
+    form_class = LoginForm
+    template_name = 'tramino/login.html'
+
+
+class Logout(LoginRequiredMixin, LogoutView):
+    """ログアウトページ"""
+    template_name = 'tramino/index.html'
+
+
+
 def index(request):
-    return render(request, 'tramino/index.html')
+    try:
+        params = {
+            'id':request.user.id,
+            'email':request.user.email,
+        }
+        return render(request, 'tramino/index.html', params)
+    except:
+        params = {
+            'id': "なし",
+            'email': "なし"
+        }
+        return render(request, 'tramino/index.html', params)
 
 
 def mypage(request):
@@ -301,26 +332,6 @@ def done(request):
 
     return redirect('tramino:mypage')
 
-
-
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import (
-    LoginView, LogoutView
-)
-from django.views import generic
-from .forms import LoginForm
-
-
-class Login(LoginView):
-    """ログインページ"""
-    form_class = LoginForm
-    template_name = 'tramino/login.html'
-
-
-class Logout(LoginRequiredMixin, LogoutView):
-    """ログアウトページ"""
-    template_name = 'tramino/mypage.html'
 
 
 class UserUpdateView(UpdateView):

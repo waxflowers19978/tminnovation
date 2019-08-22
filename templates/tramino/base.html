@@ -81,6 +81,9 @@
     <!-- メニュー -->
     <div class="header-menu">
         <ul>
+            <li><a href="{% url 'tramino:login' %}">in</a></li>
+            <li><a href="{% url 'tramino:logout' %}">out</a></li>
+            <li><a href="{% url 'tramino:index' %}">確認</a></li>
             <li><a href="{% url 'tramino:match_search' %}">ゲームを検索</a></li>
             <li><a href="{% url 'tramino:team_search' %}">チームを検索</a></li>
             <li><a href="{% url 'tramino:event_post' %}">対戦相手を募集</a></li>
