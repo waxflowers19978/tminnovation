@@ -14,7 +14,7 @@
 <div class="mypage-main-box">
   <div class="mypage-main-info">
     <h1 class="mypage-title">My Page Contents</h1>
-      
+
     <a href="{% url 'tramino:myteams' %}" class="mypage-btn">登録チーム情報の確認</a>
     <a href="#" class="mypage-btn">メッセージ</a>
     <a href="#" class="mypage-btn">メッセージテンプレートの作成</a>
@@ -22,7 +22,7 @@
     <br><br><br><br>
     <div><img src="{{ commander_pic.url }}" class="commander-img"/></div>    
     <a href="" target="_blank" class="mypage-info-footer">{{ commander_info }}</a>
-    
+
 
   </div><!-- mypage-main-info -->
 </div><!-- mypage-main-box -->
@@ -35,20 +35,20 @@
     <div class="tabs">
       <div id="menu">
         <ul>
-        {% for my_team in my_teams %}    
+        {% for my_team in my_teams %}
           <li><button><a href="#{{ my_team.tab_name }}" class="{{ my_team.tab_name }} button" onclick="ChangeTab('{{ my_team.tab_name }}'); return false;">{{ my_team.organization_name }}{{ my_team.club_name }}  </a></button></li>
         {% endfor %}
-        </ul> 
+        </ul>
       </div>
     </div>
     <br>
   </div>
   <div class="mypage-sub-box">
-  {% for my_team in my_teams %}    
+  {% for my_team in my_teams %}
 
     <div id="{{ my_team.tab_name }}" class="tab"><br>
         <h1>{{ my_team.organization_name }}{{ my_team.club_name }}({{ my_team.school_attribute }})</h1>
-        
+
         <h3 class="team-action-title">募集状況</h3>
         <table class="table">
           <tbody>
@@ -59,7 +59,7 @@
             {% endfor %}
           </tbody>
         </table>
-      
+
         <h3 class="team-action-title">応募したイベント</h3>
         <table class="table">
           <tbody>
@@ -70,7 +70,7 @@
             {% endfor %}
           </tbody>
         </table>
-      
+
         <h3 class="team-action-title">気になるイベント</h3>
         <table class="table">
           <tbody>
@@ -81,8 +81,8 @@
             {% endfor %}
           </tbody>
         </table>
-      
-      
+
+
         <h3 class="team-action-title">フォロー中のチーム</h3>
         <table class="table">
           <tbody>
@@ -97,7 +97,7 @@
   {% endfor %}
   </div><!-- mypage-sub-info -->
 </div><!--tab-box-->
- 
+
 
 
 {% endblock %}
@@ -114,9 +114,9 @@ var lists = {{ tab_names | safe }};
   function ChangeTab(tabname) {
      // タブメニュー実装
   for (  var i = 0;  i < lists.length;  i++  ) {
-  
+
   document.getElementById(( lists[ i ] )).style.display = 'none';
-  
+
   }
      // タブメニュー実装
      document.getElementById(tabname).style.display = 'block';

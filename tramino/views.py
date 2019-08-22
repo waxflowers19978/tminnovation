@@ -11,6 +11,7 @@ from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm,
 
 """ python code in python_file """
 from .python_file.model_form_save import *
+from .python_file import message
 
 
 """ 08/10以降追加 """
@@ -213,7 +214,7 @@ def team_detail(request, team_id):
                 apply.save()
                 message = 'チームをフォローしました。'
 
-    
+
     username = request.user.username
     team  = TeamInformations.objects.get(id=team_id)
     my_teams = TeamInformations.objects.filter(user=request.user.id)
@@ -238,7 +239,7 @@ def team_detail(request, team_id):
                 my_teams[i].follow_judge = 'からのフォローを解除する'
             else:
                 my_teams[i].follow_judge = 'からフォローする'
-            
+
         params = {
             'team': team,
             'my_teams': my_teams,
@@ -415,7 +416,7 @@ class EventUpdateView(UpdateView):
         context['username'] = username
         return context
 
-    
+
 class EventDeleteView(DeleteView):
     """ イベント投稿を削除するためだけのページ """
     model = EventPostPool
@@ -477,7 +478,7 @@ def past_game_post(request):
                 pass
         elif request.POST['page_name'] == 'past_game_register_ready':
             posted_by = request.POST['team_name']
-            
+
 
 
     my_teams = TeamInformations.objects.filter(user=request.user.id)
@@ -497,20 +498,30 @@ def past_game_post(request):
 
     return render(request, 'tramino/create_past_game.html', params)
 
+def message_home(request):
+    user_id = request.user.id
+    message_redis = message.MessageRedis()
+    message_user_list = message_redis.get_message_user_list(user_id)
 
-# class PastGameCreateView(CreateView):
-#     """ チームそれぞれの対戦履歴を登録するページ """
-#     model = PastGameRecords
-#     fields = '__all__'# ホントは下のように一つずつ指定した方がいい
-#     template_name = 'tramino/create_past_game.html'
+    # print(message_user_list[0]['latest_message']['readed'])
+    params = {
+        'message_user_list': message_user_list,
+    }
+    return render(request, 'tramino/message_home.html', params)
 
-#     def get_success_url(self):
-#         return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
-#         # return resolve_url('tramino:myteams')
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         teaminformations = get_object_or_404(TeamInformations, pk=self.kwargs.get('pk'))
-#         username = self.request.user.username
-#         context['username'] = username
-#         return context
+def message_room(request, room_name):
+    message_redis = message.MessageRedis()
+
+    if request.method == 'POST':
+        message_text = request.POST['message_text']
+        message_redis.save_message_to_redis(room_name, message_text)
+
+    request_path = request.path
+    room_name = request_path.replace('/tramino/message_home/', '')[:-1]
+    message_list = message_redis.get_message_from_redis(room_name)
+    params = {
+        'message_list': message_list,
+        'room_name': room_name,
+    }
+    return render(request, 'tramino/message_room.html', params)

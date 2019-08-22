@@ -1,0 +1,30 @@
+{% extends 'tramino/base.html' %}
+{% load static%}
+
+{% block css %}
+<link rel='stylesheet' type='text/css' href="{% static 'tramino\mypage\css\message_room.css'%}" />
+{% endblock%}
+
+{% block content %}
+  <div id='content'>
+    <div id='name'>
+      <h1>メッセージ</h1>
+
+    </div>
+    <div id='message-box'>
+      {% for message in message_list %}
+        <p>{{ message.sender_id }} /// {{ message.message }}</p>
+      {% endfor %}
+    </div>
+    <div id='send'>
+      <form method="post" action="{% url 'tramino:message_room' room_name %}">
+        {% csrf_token %}
+        <input type="text" name="message_text">
+        <input type="submit" value="送信する">
+        <input type="reset" value="リセット">
+      </form>
+    </div>
+  </div>
+
+
+{% endblock %}
