@@ -486,6 +486,7 @@ def message_home(request):
     message_redis = message.MessageRedis()
     message_user_list = message_redis.get_message_user_list(user_id)
 
+    # print(message_user_list[0]['latest_message']['readed'])
     params = {
         'message_user_list': message_user_list,
     }
@@ -493,6 +494,17 @@ def message_home(request):
 
 
 def message_room(request, room_name):
+    message_redis = message.MessageRedis()
+
+    if request.method == 'POST':
+        message_text = request.POST['message_text']
+        message_redis.save_message_to_redis(room_name, message_text)
+
+    request_path = request.path
+    room_name = request_path.replace('/tramino/message_home/', '')[:-1]
+    message_list = message_redis.get_message_from_redis(room_name)
     params = {
+        'message_list': message_list,
+        'room_name': room_name,
     }
     return render(request, 'tramino/message_room.html', params)

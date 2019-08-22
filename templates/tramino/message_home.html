@@ -24,6 +24,11 @@
             <div class='message-sentence'>
               {{ message_user.latest_message.message }}
             </div>
+            <div class='notification-box'>
+              {% ifequal message_user.latest_message.readed '0' %}
+                <div class='notification'></div>
+              {% endifequal %}
+            </div>
             <div class='message-timestanp'>
               <span>{{ message_user.latest_message.timestanp }}</span>
             </div>

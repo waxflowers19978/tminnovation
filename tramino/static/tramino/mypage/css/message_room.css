@@ -1,0 +1,20 @@
+#name {
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+
+#content {
+  border: 1px solid black;
+  height: auto;
+  width: 400px;
+  margin: 20px auto;
+}
+
+#send {
+  text-align: center;
+  border-top: 1px solid black;
+}
+
+#send form {
+  padding: 5px 0;
+}

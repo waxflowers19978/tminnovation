@@ -10,6 +10,17 @@ import base64
 
 class MessageRedis():
     def __init__(self):
+
+        try:
+            import local_settings
+            self.host = 'localhost'
+            self.port = 6379
+            self.password = ''
+        except:
+            #本番(hroku)
+            self.host = ''
+            self.port = ''
+            self.password = ''
         return
 
     """redisに保存"""
@@ -25,7 +36,8 @@ class MessageRedis():
         json_dict_message = self.make_message_json_dump(dict_message)
 
         #save_message
-        redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        # redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        redis_db_0 = redis.StrictRedis(host=self.host, port=self.port, db=0, password=self.password)
         redis_db_0.lpush(save_key,  json_dict_message)
 
         #save_history
@@ -49,22 +61,46 @@ class MessageRedis():
         save_key = self.grant_user_id_to_save_key(grant_user_id)
 
         #参照
-        redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        # redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        redis_db_0 = redis.StrictRedis(host=self.host, port=self.port, db=0, password=self.password)
         json_message_list = redis_db_0.lrange(save_key, 0 , -1)
 
         #復元
         message_list = self.make_message_json_loads(json_message_list)
+
+        #既読をつける
+        latest_message = message_list[0]
+        grant_readed = self.latest_message_readed(grant_user_id, save_key, message_list[0])
+        if grant_readed:
+            latest_message['readed'] = '1'
+            json_latest_message = json.dumps(latest_message)
+            redis_db_0.lpop(save_key)
+            redis_db_0.lpush(save_key, json_latest_message)
+
         return message_list
 
 
     """history"""
     def save_message_history(self, user_id, message_history_list):
-        redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        # redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        redis_db_1 = redis.StrictRedis(host=self.host, port=self.port, db=1, password=self.password)
         result = redis_db_1.delete(user_id)
         for history in message_history_list:
             redis_db_1.rpush(user_id, history)
         return
 
+    def latest_message_readed(self, grant_user_id, save_key, latest_message):
+        request_id = grant_user_id[0]
+        # print(latest_message['readed'])
+        readed = latest_message['readed']
+        if readed == '0':
+            return True
+        else:
+            return False
+
+
+
+        return
 
     def new_message_history(self, old_message_history_list, save_key):
         bytes_save_key = save_key.encode('utf-8')
@@ -104,6 +140,7 @@ class MessageRedis():
             'receiver_id': receiver_id,
             'timestanp': date_now,
             'message': message,
+            'readed': '0',
         }
         return dict_message
 
@@ -138,7 +175,8 @@ class MessageRedis():
 
     def get_message_history(self, user_id):
         string_user_id = str(user_id)
-        redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        # redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        redis_db_1 = redis.StrictRedis(host=self.host, port=self.port, db=1, password=self.password)
         message_history_list= redis_db_1.lrange(string_user_id, 0 , -1)
         return message_history_list
 
@@ -168,8 +206,10 @@ class MessageRedis():
         return room_name
 
     def get_latest_message(self, save_key):
-        redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        # redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        redis_db_0 = redis.StrictRedis(host=self.host, port=self.port, db=0, password=self.password)
         latest_json_encoded_message = redis_db_0.lindex(save_key, 0)
         latest_json_message = latest_json_encoded_message.decode('utf-8')
+        latest_json_message = latest_json_encoded_message
         latest_message = json.loads(latest_json_message)
         return latest_message

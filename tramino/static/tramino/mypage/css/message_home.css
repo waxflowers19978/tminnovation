@@ -38,7 +38,34 @@
   justify-content: space-around;
 }
 
+.message-sentence {
+  width: 65%;
+  padding-left: 30px;
+  height: 24px;
+  overflow: hidden;
+}
+
+.notification-box {
+  width: 7%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.notification {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid red;
+}
+
+.message-timestanp {
+  width: 28%;
+  text-align: center;
+}
+
 .message span {
-  font-size: 3px;
+  font-size: 2px;
   color: rgb(100, 100, 100);
 }
