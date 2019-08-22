@@ -56,7 +56,7 @@
     </tr>
     <tr>
       <th>プレイヤー数</th>
-      <td>{{ teaminformations.number_of_menbers }}</td>
+      <td>{{ teaminformations.number_of_members }}</td>
     </tr>
 
     <tr>
@@ -79,7 +79,13 @@
   </tbody>
 </table>
 <br>
-<h2><a href="{% url 'tramino:create_past_game' teaminformations.id %}">過去の対戦履歴を追加</a></h2>
+
+<form action="{% url 'tramino:past_game_post' %}" method="POST" enctype="multipart/form-data"> 
+  {% csrf_token %}
+  <input class="btn btn-primary" type="submit" value="過去の対戦履歴を追加">
+  <input type="hidden" name="page_name" value="past_game_register_ready">
+  <input type="hidden" name="team_name" value={{teaminformations.organization_name}}>
+</form>
 
 <h2>登録済みの対戦履歴</h2>
 

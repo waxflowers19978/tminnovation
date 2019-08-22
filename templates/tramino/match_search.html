@@ -53,8 +53,8 @@
               <div>
                   <div class="title3">{{ event.event_host_team.organization_name }}{{ event.event_host_team.club_name }}</div>
                   <div class="content3" style="color:darkgray;">{{ event.event_host_team.prefectures_name }}{{ event.event_host_team.city_name }}</div>
-                  <div class="content3" style="font-size:28px;">{{ event.event_name }}</div>
-                  <div class="content3">{{ event.event_host_team.number_of_menbers }}</div>
+                  <div class="content3" style="font-size:20px;">{{ event.event_name }}</div>
+                  <div class="content3">プレイヤー数:{{ event.event_host_team.number_of_members }}人</div>
                   <div class="content3">{{ event.event_host_team.activity_place }}</div>
                   <div class="content3">{{ event.event_host_team.achievement }}</div>
                   <!-- <div class="content3">{{ event.event_description }}</div> -->
@@ -66,4 +66,114 @@
     </tbody>
   </table>
 
-{% endblock %}
+
+  <div id="app">
+    <input type="text" v-model="keyword">
+    <table>
+        <tr v-for="user in filteredUsers">
+            <td v-text="user.id"></td>
+            <td v-text="user.name"></td>
+            <td v-text="user.email"></td>
+        </tr>
+    </table>
+  </div>
+  <br><br><br><br><br>
+
+
+
+  <br><br><br><br><br>
+
+
+  {% endblock %}
+
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+<script>
+
+  new Vue({
+      el: '#app',
+      data: {
+          keyword: '',
+          users: [
+              {
+                  id: 1,
+                  name: '鈴木太郎',
+                  email: 'suzukitaro@example.com'
+              },
+              {
+                  id: 2,
+                  name: '佐藤二郎',
+                  email: 'satoujiro@example.com'
+              },
+              {
+                  id: 3,
+                  name: '田中三郎',
+                  email: 'tanakasaburo@example.com'
+              },
+              {
+                  id: 4,
+                  name: '山本四郎',
+                  email: 'yamamotoshiro@example.com'
+              },
+              {
+                  id: 5,
+                  name: '高橋五郎',
+                  email: 'takahashigoro@example.com'
+              },
+          ]
+      },
+      computed: {
+          filteredUsers: function() {
+
+              var users = [];
+
+              for(var i in this.users) {
+
+                  var user = this.users[i];
+
+                  if(user.name.indexOf(this.keyword) !== -1 ||
+                      user.email.indexOf(this.keyword) !== -1) {
+
+                      users.push(user);
+
+                  }
+
+              }
+
+              return users;
+
+          }
+
+      }
+      
+  });
+
+</script>
+
+
+<script>
+const items = [
+　{'Id':'1', 'Name':'Tanaka', 'Age':'20'},
+  {'Id':'2', 'Name':'Suzuki', 'Age':'30'},
+  {'Id':'3', 'Name':'Takahasi', 'Age':'40'}
+];
+
+const ids = [
+　'1', '2', '3'
+];
+
+const ages = [
+　'20', '30', '40'
+];
+
+new Vue({
+  el: '#app',
+  data: {
+    items: items
+});
+
+
+</script>
+
+{% endblock%}

@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 
 
 """ import models or forms """
-from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords,EventPostComment
-from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm, MessageForm
+from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords
+from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm, MessageForm, PastGameRecordsForm
 
 """ python code in python_file """
 from .python_file.model_form_save import *
@@ -131,19 +131,6 @@ def match_detail(request, event_id):
             else:
                 apply.save()
                 message = '気になるに追加しました。'
-        elif request.POST['page_name'] == 'comment_submit':
-            event_id = request.POST['event_id']
-            posted_team_name = request.POST['team_name']
-            print(posted_team_name)
-            print("--")
-
-            form = MessageForm()
-            comment = EventPostComment()
-            comment.message = request.POST['any_message']
-            comment.post = EventPostPool.objects.get(id=event_id)
-            comment.guest_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
-            comment.save()
-            message = 'コメントを投稿しました'
 
     my_teams_id = []
     for my_team in my_teams:
@@ -445,24 +432,6 @@ class EventDeleteView(DeleteView):
         return context
 
 
-class PastGameCreateView(CreateView):
-    """ チームそれぞれの対戦履歴を登録するページ """
-    model = PastGameRecords
-    fields = '__all__'# ホントは下のように一つずつ指定した方がいい
-    template_name = 'tramino/create_past_game.html'
-
-    def get_success_url(self):
-        return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
-        # return resolve_url('tramino:myteams')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        teaminformations = get_object_or_404(TeamInformations, pk=self.kwargs.get('pk'))
-        username = self.request.user.username
-        context['username'] = username
-        return context
-
-
 class PastGameDeleteView(DeleteView):
     """ チームそれぞれの対戦履歴をを削除するためだけのページ """
     model = PastGameRecords
@@ -470,7 +439,7 @@ class PastGameDeleteView(DeleteView):
 
     def get_success_url(self):
         #return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
-        return resolve_url('tramino:mypage')
+        return resolve_url('tramino:myteams')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -479,7 +448,69 @@ class PastGameDeleteView(DeleteView):
         return context
 
 
+def past_game_post(request):
+    username = request.user.username
+    message = ""
+    complate_message = ""
+    posted_by = ""
+    if request.method == 'POST':
+        if request.POST['page_name'] == 'past_game_post':
+            posted_team_name = request.POST['posted_by']
+            # posted_team_name = request.POST['team_name']
+            form = PastGameRecordsForm(request.POST, request.FILES)
+            message = ""
+            complate_message = ""
+            if form.is_valid():
+                past_game = PastGameRecords()
+                past_game.register_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
+                past_game.opponent_team_name = form.cleaned_data['opponent_team_name']
+                past_game.game_category = form.cleaned_data['game_category']
+                past_game.my_score = form.cleaned_data['my_score']
+                past_game.opponent_score = form.cleaned_data['opponent_score']
+                past_game.game_date = form.cleaned_data['game_date']
+                past_game.game_description = form.cleaned_data['game_description']
+                past_game.save()
+                message = '試合記録を登録しました。続けて登録できます。'
+                complate_message = '登録チーム情報の確認に戻る'
+            else:
+                message = '投稿フォームのパラメータに不備があります。'
+                pass
+        elif request.POST['page_name'] == 'past_game_register_ready':
+            posted_by = request.POST['team_name']
+            
 
 
+    my_teams = TeamInformations.objects.filter(user=request.user.id)
+    my_teams_name = []
+    for my_team in my_teams:
+        my_teams_name.append(my_team.organization_name)
+    form = PastGameRecordsForm()
+
+    params = {
+    'form': form,
+    'username': username,
+    'my_teams_name':my_teams_name,
+    'message':message,
+    'complate_message':complate_message,
+    'posted_by':posted_by,
+    }
+
+    return render(request, 'tramino/create_past_game.html', params)
 
 
+# class PastGameCreateView(CreateView):
+#     """ チームそれぞれの対戦履歴を登録するページ """
+#     model = PastGameRecords
+#     fields = '__all__'# ホントは下のように一つずつ指定した方がいい
+#     template_name = 'tramino/create_past_game.html'
+
+#     def get_success_url(self):
+#         return resolve_url('tramino:myteams_detail', pk=self.kwargs['pk'])
+#         # return resolve_url('tramino:myteams')
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         teaminformations = get_object_or_404(TeamInformations, pk=self.kwargs.get('pk'))
+#         username = self.request.user.username
+#         context['username'] = username
+#         return context

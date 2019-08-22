@@ -49,3 +49,12 @@ class EventPostUpdateForm(forms.ModelForm):
 class MessageForm(forms.Form):
     any_message = forms.CharField(max_length = 300)
 
+class PastGameRecordsForm(forms.Form):
+    game_category_list = [['練習試合','練習試合'],['公式戦','公式戦']]
+    score_list = [['0','0'],['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6'],['7','7'],['8','8'],['9','9'],['10','10'],['11~','11~']]
+    opponent_team_name = forms.CharField(max_length = 50)
+    game_category = forms.ChoiceField(choices=game_category_list)
+    my_score = forms.ChoiceField(choices=score_list)
+    opponent_score = forms.ChoiceField(choices=score_list)
+    game_date = forms.DateField(required=True,widget=forms.DateInput(attrs={"type": "date"}),input_formats=['%Y-%m-%d'])
+    game_description = forms.CharField(max_length = 300)

@@ -1,7 +1,7 @@
 {% extends 'tramino/base.html' %}
 
 {% block content %}
-<form action="" method="POST">
+<!-- <form action="" method="POST">
     {{ form.non_field_errors }}
     <table class="table">
         <tbody>
@@ -15,5 +15,79 @@
     </table>
     {% csrf_token %}
     <button type="submit" class="btn btn-success btn-lg" >送信</button>
-</form>
+</form> -->
+<a href="{% url 'tramino:myteams' %}" class="mypage-btn">{{ complate_message }}</a>
+
+<h1>{{ posted_by }}試合登録</h1>
+<table class="table">
+  <form action="{% url 'tramino:past_game_post' %}" name="form1" method="POST" enctype="multipart/form-data"> 
+  {% csrf_token %}
+
+    <!-- <select name="teamnamechoice" id="name">
+      {% for my_team_name in my_teams_name %}
+        <option name="my_team_name" value="{{ my_team_name }}">{{ my_team_name }}</option>
+      {% endfor %}
+    </select> -->
+
+    <tbody>
+    <tr>
+      <th>相手チーム名</th>
+      <td>{{ form.opponent_team_name }}</td>
+    </tr>
+    <tr>
+      <th>試合区分</th>
+      <td>{{ form.game_category }}</td>
+    </tr>
+    <tr>
+      <th>得点数</th>
+      <td>{{ form.my_score }}</td>
+    </tr>
+    <tr>
+      <th>失点数</th>
+      <td>{{ form.opponent_score }}</td>
+    </tr>
+    <tr>
+      <th>実施日</th>
+      <td>{{ form.game_date }}</td>
+    </tr>
+    <tr>
+      <th>試合詳細</th>
+      <td>{{ form.game_description }}</td>
+    </tr>
+    <tr>
+      <th><input class="btn btn-primary" type="submit" value="Submit" onclick="clickBtn1()"/></th>
+      <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+    </tr>
+  </tbody>
+  <input type="hidden" name="page_name" value="past_game_post">
+  <input type="hidden" id="team_name" name="team_name" value="">
+  <input type="hidden" id="posted_by" name="posted_by" value="{{ posted_by }}">
+  </form>
+</table>
 {% endblock %}
+
+{% block js %}
+<!-- <script>
+function clickBtn1(){
+
+  const teamnamechoice = document.form1.teamnamechoice;
+
+  // 値(数値)を取得
+  const num = teamnamechoice.selectedIndex;
+  //const num = document.form1.color1.selectedIndex;
+
+  // 値(数値)から値(value値)を取得
+  const str = teamnamechoice.options[num].value;
+  //const str = document.form1.color1.options[num].value;
+
+  document.getElementById("team_name").value = str;
+  console.log("done"); 
+}
+</script>
+ -->
+
+{% endblock %}
+
+
+
+
