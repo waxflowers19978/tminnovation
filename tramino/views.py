@@ -540,14 +540,27 @@ def message_home(request):
 
 
 def message_room(request, room_name):
+
     message_redis = message.MessageRedis()
+
+    # user_id = message_redis.room_name_to_ord_user_id(room_name)
+    # grant_user_id = message_redis.user_id_to_grant_user_id(user_id)
+    # my_id = request.user.id
+    # print(grant_user_id)
+    # print(type(grant_user_id[0]))
+    # print()
+    # print(my_id)
+    # print(type(my_id))
+    # if my_id != grant_user_id[0]:
+    #     return render(request, 'tramino/message_room.html')
+
 
     if request.method == 'POST':
         message_text = request.POST['message_text']
         message_redis.save_message_to_redis(room_name, message_text)
 
-    request_path = request.path
-    room_name = request_path.replace('/tramino/message_home/', '')[:-1]
+    # request_path = request.path
+    # room_name = request_path.replace('/tramino/message_home/', '')[:-1]
     message_list = message_redis.get_message_from_redis(room_name)
     params = {
         'message_list': message_list,

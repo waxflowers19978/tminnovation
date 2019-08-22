@@ -158,11 +158,14 @@ class MessageRedis():
         message_user_list = []
 
         message_history_list = self.get_message_history(user_id)
+
         for save_key in message_history_list:
             history_dict = {}
             oponent_id = self.get_oponent_id(save_key, user_id)
             oponent_teams = self.get_oponent_teams(oponent_id)
-            room_name = self.save_key_to_room_name(save_key)
+            # room_name = self.save_key_to_room_name(save_key)
+            # print(room_name)
+            room_name = self.make_room_name(user_id, oponent_id)
             latest_message = self.get_latest_message(save_key)
 
             history_dict['oponent_id'] = oponent_id
@@ -196,14 +199,15 @@ class MessageRedis():
         oponent_teams = TeamInformations.objects.filter(user=int_str_id)
         return oponent_teams
 
-    def save_key_to_room_name(self, save_key):
-        user_id_1, user_id_2 = str(save_key, 'utf-8').split('_')
-        ord_id_1 = ''.join([str(ord(i)) for i in user_id_1])
-        ord_id_2 = ''.join([str(ord(i)) for i in user_id_2])
+    def make_room_name(self, user_id, oponent_id):
+        string_user_id = str(user_id)
+        ord_id_1 = ''.join([str(ord(i)) for i in string_user_id])
+        ord_id_2 = ''.join([str(ord(i)) for i in oponent_id])
         ord_save_key = ord_id_1 + '_' + ord_id_2
         ord_save_key = ord_save_key.encode('utf-8')
         room_name = base64.b64encode(ord_save_key)
         room_name = str(room_name, 'utf-8')
+        print(room_name)
         return room_name
 
     def get_latest_message(self, save_key):
