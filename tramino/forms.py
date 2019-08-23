@@ -47,7 +47,8 @@ class EventPostUpdateForm(forms.ModelForm):
 
     class Meta:
         model = EventPostPool
-        fields = ('event_name','event_description','event_picture','event_date','apply_deadline')
+        fields = ('event_name','event_description','event_picture')
+        # fields = ('event_name','event_description','event_picture','event_date','apply_deadline')
 
         # fields = '__all__'
         widgets = {

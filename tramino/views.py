@@ -27,9 +27,9 @@ from django.shortcuts import get_object_or_404, resolve_url
 from django.views import generic
 from django.views.generic import ListView, UpdateView, DetailView, UpdateView, DeleteView, CreateView
 from .python_file.profile_complate_percent import *
+import datetime
 
 # Create your views here.
-
 
 
 class Login(LoginView):
@@ -41,7 +41,6 @@ class Login(LoginView):
 class Logout(LoginRequiredMixin, LogoutView):
     """ログアウトページ"""
     template_name = 'tramino/index.html'
-
 
 
 def index(request):
@@ -212,7 +211,6 @@ def event_post(request):
     return render(request, 'tramino/event_post.html', params)
 
 
-
 def team_search(request):
     username = request.user.username
     team_informations = TeamInformations.objects.all().exclude(user=request.user.id)
@@ -307,7 +305,14 @@ def done(request):
                 event.event_picture = form.cleaned_data['event_picture']
                 event.event_date = form.cleaned_data['event_date']
                 event.apply_deadline = form.cleaned_data['apply_deadline']
-                event.save()
+                eventdates = event.event_date
+                applydeadline = event.apply_deadline
+                today = datetime.date.today()
+                if today<eventdates and today<applydeadline:
+                    event.save()
+                else:
+                    message = '正しい日付を入力してください'
+                    print(message)
                 message = 'イベントの募集を投稿しました。'
             else:
                 message = '投稿フォームのパラメータに不備があります。'
@@ -331,7 +336,6 @@ def done(request):
 
 
     return redirect('tramino:mypage')
-
 
 
 class UserUpdateView(UpdateView):
