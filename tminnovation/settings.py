@@ -178,3 +178,21 @@ try:
     ALLOWED_HOSTS = local_settings.allowed_hosts
 except:
     pass
+
+AWS_ACCESS_KEY_ID = 'AKIAUNTYA6OXS3ODQIGJ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'tminnovation-tramino'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',  # 1日はそのキャッシュを使う
+}
+
+
+# 静的ファイルの設定
+AWS_LOCATION = 'static'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+
+# メディアファイルの設定。今回は「project」というプロジェクト名の例
+DEFAULT_FILE_STORAGE = 'tminnovation.backends.MediaStorage'
