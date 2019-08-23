@@ -66,76 +66,10 @@
     </tbody>
   </table>
 
-
-  <div id="app">
-    <input type="text" v-model="keyword">
-    <table>
-        <tr v-for="user in filteredUsers">
-            <td v-text="user.id"></td>
-            <td v-text="user.name"></td>
-            <td v-text="user.email"></td>
-        </tr>
-    </table>
-  </div>
-
-  <br><br><br><br><br>
-
-
-
-  <br><br><br><br><br>
-
-
-  {% endblock %}
+{% endblock %}
 
 
 {% block js %}
-<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
-<script>
-
-  new Vue({
-      el: '#app',
-      data: {
-          keyword: '',
-          users: [
-              {
-                  id: 1,
-                  name: '鈴木太郎',
-                  email: 'suzukitaro@example.com'
-              },
-              {
-                  id: 2,
-                  name: '佐藤二郎',
-                  email: 'satoujiro@example.com'
-              },
-          ]
-      },
-      computed: {
-          filteredUsers: function() {
-
-              var users = [];
-
-              for(var i in this.users) {
-
-                  var user = this.users[i];
-
-                  if(user.name.indexOf(this.keyword) !== -1 ||
-                      user.email.indexOf(this.keyword) !== -1) {
-
-                      users.push(user);
-
-                  }
-
-              }
-
-              return users;
-
-          }
-
-      }
-
-  });
-
-</script>
 
 
 {% endblock%}
