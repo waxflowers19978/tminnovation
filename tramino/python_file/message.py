@@ -21,7 +21,6 @@ class MessageRedis():
             self.host = 'ec2-3-224-50-50.compute-1.amazonaws.com'
             self.port = '14469'
             self.password = 'p453ee2f3174aa92a31b5044cdcbf569206a18352e4172a81cc7c98538359db86'
-            print("access succeed to heroku-redis")
         return
 
     """redisに保存"""
@@ -178,8 +177,10 @@ class MessageRedis():
         return message_user_list
 
     def get_message_history(self, user_id):
+        print("try get_message_history from heroku-redis")
         string_user_id = str(user_id)
         redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        print("access succeed to heroku-redis")
         # redis_db_1 = redis.StrictRedis(host=self.host, port=self.port, db=1, password=self.password)
         message_history_list= redis_db_1.lrange(string_user_id, 0 , -1)
         return message_history_list
