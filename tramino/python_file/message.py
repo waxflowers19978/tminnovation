@@ -177,10 +177,10 @@ class MessageRedis():
         return message_user_list
 
     def get_message_history(self, user_id):
-        print("try get_message_history from heroku-redis")
+        print("----- try get_message_history from heroku-redis -----")
         string_user_id = str(user_id)
         redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
-        print("access succeed to heroku-redis")
+        print("----- access succeed to heroku-redis -----")
         # redis_db_1 = redis.StrictRedis(host=self.host, port=self.port, db=1, password=self.password)
         message_history_list= redis_db_1.lrange(string_user_id, 0 , -1)
         return message_history_list
@@ -208,7 +208,6 @@ class MessageRedis():
         ord_save_key = ord_save_key.encode('utf-8')
         room_name = base64.b64encode(ord_save_key)
         room_name = str(room_name, 'utf-8')
-        print(room_name)
         return room_name
 
     def get_latest_message(self, save_key):

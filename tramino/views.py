@@ -59,7 +59,7 @@ def index(request):
 
 
 def mypage(request):
-    print("access succeed to mypage")
+    print("----- access succeed to mypage -----")
     username = request.user.username
     my_teams = TeamInformations.objects.filter(user=request.user.id)
     my_teams_id = []
@@ -535,8 +535,12 @@ def past_game_post(request):
 def message_home(request):
     user_id = request.user.id
     message_redis = message.MessageRedis()
-    message_user_list = message_redis.get_message_user_list(user_id)
-
+    print("----- instance process complate -----")
+    try:
+        message_user_list = message_redis.get_message_user_list(user_id)
+    except:
+        message_user_list = ''
+        print("----- non users -----")
     # print(message_user_list[0]['latest_message']['readed'])
     params = {
         'message_user_list': message_user_list,
