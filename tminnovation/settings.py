@@ -52,6 +52,12 @@ INSTALLED_APPS = [
     'imagekit',
 ]
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'nexers.familia19978@gmail.com'
+EMAIL_HOST_PASSWORD = 'mhaeuthtkooewagl'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -184,15 +190,13 @@ except:
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',  # 1日はそのキャッシュを使う
     }
-
-
     # 静的ファイルの設定
     AWS_LOCATION = 'static'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
-
     # メディアファイルの設定。今回は「project」というプロジェクト名の例
     DEFAULT_FILE_STORAGE = 'tminnovation.backends.MediaStorage'
+
     pass
 
