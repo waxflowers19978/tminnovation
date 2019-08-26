@@ -16,10 +16,12 @@ class MessageRedis():
             self.port = 6379
             self.password = ''
         except:
+            print("try access to heroku-redis")
             #本番(hroku)
             self.host = 'ec2-3-224-50-50.compute-1.amazonaws.com'
             self.port = '14469'
             self.password = 'p453ee2f3174aa92a31b5044cdcbf569206a18352e4172a81cc7c98538359db86'
+            print("access succeed to heroku-redis")
         return
 
     """redisに保存"""

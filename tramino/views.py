@@ -59,6 +59,7 @@ def index(request):
 
 
 def mypage(request):
+    print("access succeed to mypage")
     username = request.user.username
     my_teams = TeamInformations.objects.filter(user=request.user.id)
     my_teams_id = []
