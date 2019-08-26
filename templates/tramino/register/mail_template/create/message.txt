@@ -6,4 +6,4 @@
 本登録用URL
 {{ protocol}}://{{ domain }}{% url 'tramino:user_create_complete' token %}
 
-ほにゃらら
+～～～以下とらみのの説明～～～

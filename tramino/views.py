@@ -13,7 +13,7 @@ from django.contrib.auth.views import (
 
 """ import models or forms """
 from .models import TeamInformations, EventPostPool, EventApplyPool, FavoriteEventPool,FavoriteTeamPool,PastGameRecords
-from .forms import TeamInformationsForm, EventPostPoolForm, EventPostUpdateForm, MessageForm, PastGameRecordsForm, UserCreateForm
+from .forms import EventPostPoolForm, EventPostUpdateForm, MessageForm, PastGameRecordsForm, UserCreateForm, TeamInfoForm
 from .forms import LoginForm
 
 """ python code in python_file """
@@ -72,7 +72,7 @@ class UserCreate(generic.CreateView):
 
 
 class UserCreateDone(generic.TemplateView):
-    """ユーザー仮登録したよ"""
+    """ユーザー仮登録状態"""
     template_name = 'tramino/register/user_create_done.html'
 
 
@@ -110,6 +110,7 @@ class UserCreateComplete(generic.TemplateView):
 
         return HttpResponseBadRequest()
 
+
 class Login(LoginView):
     """ログインページ"""
     form_class = LoginForm
@@ -137,20 +138,6 @@ def index(request):
 
 
 def mypage(request):
-    # EMAIL = 'nexers.familia19978@gmail.com'
-    # PASSWORD = 'mhaeuthtkooewagl'
-    # TO = 'shun.210.suke@gmail.com'
-    # msg = MIMEText('メールテスト！！！')
-    # msg['Subject'] = 'Test Mail Subject'
-    # msg['From'] = EMAIL
-    # msg['To'] = TO
-    # s = smtplib.SMTP(host='smtp.gmail.com', port=587)
-    # s.starttls()
-    # s.login(EMAIL, PASSWORD)
-    # s.sendmail(EMAIL, TO, msg.as_string())
-    # s.quit()    
-
-    print("----- access succeed to mypage -----")
     username = request.user.username
     my_teams = TeamInformations.objects.filter(user=request.user.id)
     my_teams_id = []
@@ -182,10 +169,12 @@ def mypage(request):
         'team_counts':team_counts,
         }
     if request.method == 'POST':
-        form = TeamInformationsForm(request.POST, request.FILES)
+        user_id = request.user.id
+        form = TeamInfoForm(request.POST, request.FILES)
         if form.is_valid():
             teamInfoSave()
             team = TeamInformations()
+            team.user = User.objects.get(id=user_id)
             team.organization_name = form.cleaned_data['organization_name']
             team.club_name = form.cleaned_data['club_name']
             team.sex = form.cleaned_data['sex']
@@ -193,15 +182,15 @@ def mypage(request):
             team.prefectures_name = form.cleaned_data['prefectures_name']
             team.city_name = form.cleaned_data['city_name']
             team.activity_place = form.cleaned_data['activity_place']
-            team.team_picture = form.cleaned_data['team_picture']
-            team.url = form.cleaned_data['url']
+            # team.team_picture = form.cleaned_data['team_picture']
+            # team.url = form.cleaned_data['url']
             team.achievement = form.cleaned_data['achievement']
-            team.practice_frequency = form.cleaned_data['practice_frequency']
+            # team.practice_frequency = form.cleaned_data['practice_frequency']
             team.number_of_members = form.cleaned_data['number_of_members']
             team.commander_name = form.cleaned_data['commander_name']
-            team.commander_career = form.cleaned_data['commander_career']
-            team.commander_picture = form.cleaned_data['commander_picture']
-            team.commander_introduction = form.cleaned_data['commander_introduction']
+            # team.commander_career = form.cleaned_data['commander_career']
+            # team.commander_picture = form.cleaned_data['commander_picture']
+            # team.commander_introduction = form.cleaned_data['commander_introduction']
             team.save()
         # return render(request, 'tramino/mypage.html')
     return render(request, 'tramino/mypage.html', params)
@@ -375,7 +364,7 @@ def team_detail(request, team_id):
 
 
 def create(request):
-    form = TeamInformationsForm()
+    form = TeamInfoForm()
     params = {
     'form': form,
     }
@@ -387,6 +376,10 @@ def done(request):
     if request.method == 'POST':
         if request.POST['page_name'] == 'event_post':
             posted_team_name = request.POST['team_name']
+            if posted_team_name == '':
+                message = 'チームがありません。対戦相手の募集にはチームの登録が必要です。'
+                params = {'message': message}
+                return render(request, 'tramino/done.html', params)
             form = EventPostPoolForm(request.POST, request.FILES)
             message = ""
             if form.is_valid():

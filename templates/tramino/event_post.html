@@ -12,11 +12,13 @@
     <form action="{% url 'tramino:done' %}" name="form1" method="POST" enctype="multipart/form-data"> 
     {% csrf_token %}
 
-      <select name="teamnamechoice" id="name">
-        {% for my_team_name in my_teams_name %}
-          <option name="my_team_name" value="{{ my_team_name }}">{{ my_team_name }}</option>
-        {% endfor %}
-      </select>
+      <div>募集元のチームを選択：
+        <select name="teamnamechoice" id="name">
+          {% for my_team_name in my_teams_name %}
+            <option name="my_team_name" value="{{ my_team_name }}">{{ my_team_name }}</option>
+          {% endfor %}
+        </select>  
+      </div>
 
       <tbody>
       <tr>
