@@ -10,7 +10,6 @@ import base64
 
 class MessageRedis():
     def __init__(self):
-        """
         try:
             import local_settings
             self.host = 'localhost'
@@ -18,10 +17,9 @@ class MessageRedis():
             self.password = ''
         except:
             #本番(hroku)
-            self.host = ''
-            self.port = ''
-            self.password = ''
-        """
+            self.host = 'ec2-3-224-50-50.compute-1.amazonaws.com'
+            self.port = '14469'
+            self.password = 'p453ee2f3174aa92a31b5044cdcbf569206a18352e4172a81cc7c98538359db86'
         return
 
     """redisに保存"""
