@@ -16,7 +16,7 @@
     <h1 class="mypage-title">My Page Contents</h1>
 
     <a href="{% url 'tramino:myteams' %}" class="mypage-btn">登録チームの追加・確認</a>
-    <a href="#" class="mypage-btn">メッセージ</a>
+    <a href="{% url 'tramino:schedule' %}" class="mypage-btn">スケジュール</a>
     <a href="#" class="mypage-btn">メッセージテンプレートの作成</a>
     <a href="{% url 'tramino:user_update' %}" class="mypage-btn">ユーザー情報変更</a>
     <br><br><br><br>
@@ -27,8 +27,6 @@
   </div><!-- mypage-main-info -->
 </div><!-- mypage-main-box -->
 <!-- --------------------↓↓↓↓チームごとの募集状況、応募状況、気になるイベント、フォロー中↓↓↓↓--------------------- -->
-
-
 
 <div class="tabbox">
   <div class="mypage-center-box">

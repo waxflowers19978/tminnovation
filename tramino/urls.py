@@ -8,6 +8,7 @@ urlpatterns = [
     # path('hp/', views.hp, name = 'hp'),
     path('index/', views.index, name = 'index'),
     path('mypage/', views.mypage, name='mypage'),
+    path('schedule/', views.schedule, name='schedule'),
     path('match_search/', views.match_search, name='match_search'),
     path('match_detail/<int:event_id>/', views.match_detail, name='match_detail'),
     path('match_detail/update/<int:pk>/', views.EventUpdateView.as_view(), name='edit_event'),

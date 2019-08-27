@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-This file calculate profile complate percent.
+This file calculate profile complete percent.
 """
 
 def percent(objects,count):

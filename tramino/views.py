@@ -19,6 +19,8 @@ from .forms import LoginForm
 """ python code in python_file """
 from .python_file.model_form_save import *
 from .python_file import message
+from .python_file.profile_complete_percent import *
+from .python_file.schedule_process import *
 
 
 """ 08/10以降追加 """
@@ -26,7 +28,6 @@ from django.shortcuts import get_object_or_404, resolve_url
 
 from django.views import generic
 from django.views.generic import ListView, UpdateView, DetailView, UpdateView, DeleteView, CreateView
-from .python_file.profile_complate_percent import *
 import datetime
 from email.mime.text import MIMEText
 import smtplib
@@ -157,9 +158,7 @@ def mypage(request):
         commander_picture = my_teams[0].commander_picture
         team_counts = len(my_teams)
     except:
-        commander_info = ""
-        commander_picture = ""
-        team_counts = 0
+        commander_info, commander_picture, team_counts = "", "", 0
     params = {
         'username': username,
         'my_teams': my_teams,
@@ -172,28 +171,21 @@ def mypage(request):
         user_id = request.user.id
         form = TeamInfoForm(request.POST, request.FILES)
         if form.is_valid():
-            teamInfoSave()
-            team = TeamInformations()
-            team.user = User.objects.get(id=user_id)
-            team.organization_name = form.cleaned_data['organization_name']
-            team.club_name = form.cleaned_data['club_name']
-            team.sex = form.cleaned_data['sex']
-            team.school_attribute = form.cleaned_data['school_attribute']
-            team.prefectures_name = form.cleaned_data['prefectures_name']
-            team.city_name = form.cleaned_data['city_name']
-            team.activity_place = form.cleaned_data['activity_place']
-            # team.team_picture = form.cleaned_data['team_picture']
-            # team.url = form.cleaned_data['url']
-            team.achievement = form.cleaned_data['achievement']
-            # team.practice_frequency = form.cleaned_data['practice_frequency']
-            team.number_of_members = form.cleaned_data['number_of_members']
-            team.commander_name = form.cleaned_data['commander_name']
-            # team.commander_career = form.cleaned_data['commander_career']
-            # team.commander_picture = form.cleaned_data['commander_picture']
-            # team.commander_introduction = form.cleaned_data['commander_introduction']
-            team.save()
-        # return render(request, 'tramino/mypage.html')
+            TeamInfoSave(request)
     return render(request, 'tramino/mypage.html', params)
+
+
+def schedule(request):
+    my_teams = TeamInformations.objects.filter(user=request.user.id)
+    my_teams_id = []
+    for my_team in my_teams:
+        my_teams_id.append(my_team.id)
+    schedule_data_set,calendar_data_set = schedule_dataset_generator(my_teams_id,EventPostPool.objects.all(),EventApplyPool.objects.all())
+    params = {
+        'schedule_data_set': schedule_data_set,
+        'calendar_data_set': calendar_data_set,
+        }
+    return render(request, 'tramino/schedule.html', params)
 
 
 def match_search(request):
@@ -205,8 +197,6 @@ def match_search(request):
         my_teams_id.append(my_team.id)
     for i,my_team_id in enumerate(my_teams_id):
         event_post_pool = event_post_pool.exclude(event_host_team=my_team_id)
-
-    import json
     params = {
         'events': event_post_pool,
         'username': username,
@@ -397,7 +387,6 @@ def done(request):
                     event.save()
                 else:
                     message = '正しい日付を入力してください'
-                    print(message)
                 message = 'イベントの募集を投稿しました。'
             else:
                 message = '投稿フォームのパラメータに不備があります。'
@@ -473,10 +462,8 @@ class MyTeamsDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         teaminformations = get_object_or_404(TeamInformations, pk=self.kwargs.get('pk'))
-        # commander_pic = teaminformations.commander_picture.url
-
         pastgamerecords = PastGameRecords.objects.filter(register_team_id=self.kwargs.get('pk'))
-        context['profile_complate'] = percent(teaminformations,pastgamerecords.count())# プロフィール完成率計算
+        context['profile_complete'] = percent(teaminformations,pastgamerecords.count())# プロフィール完成率計算
         context['pastgamerecords'] = pastgamerecords
         username = self.request.user.username
         context['username'] = username
@@ -570,7 +557,7 @@ class PastGameDeleteView(DeleteView):
 def past_game_post(request):
     username = request.user.username
     message = ""
-    complate_message = ""
+    complete_message = ""
     posted_by = ""
     if request.method == 'POST':
         if request.POST['page_name'] == 'past_game_post':
@@ -578,7 +565,7 @@ def past_game_post(request):
             # posted_team_name = request.POST['team_name']
             form = PastGameRecordsForm(request.POST, request.FILES)
             message = ""
-            complate_message = ""
+            complete_message = ""
             if form.is_valid():
                 past_game = PastGameRecords()
                 past_game.register_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
@@ -590,36 +577,34 @@ def past_game_post(request):
                 past_game.game_description = form.cleaned_data['game_description']
                 past_game.save()
                 message = '試合記録を登録しました。続けて登録できます。'
-                complate_message = '登録チーム情報の確認に戻る'
+                complete_message = '登録チーム情報の確認に戻る'
             else:
                 message = '投稿フォームのパラメータに不備があります。'
                 pass
         elif request.POST['page_name'] == 'past_game_register_ready':
             posted_by = request.POST['team_name']
 
-
-
     my_teams = TeamInformations.objects.filter(user=request.user.id)
     my_teams_name = []
     for my_team in my_teams:
         my_teams_name.append(my_team.organization_name)
     form = PastGameRecordsForm()
-
     params = {
     'form': form,
     'username': username,
     'my_teams_name':my_teams_name,
     'message':message,
-    'complate_message':complate_message,
+    'complete_message':complete_message,
     'posted_by':posted_by,
     }
 
     return render(request, 'tramino/create_past_game.html', params)
 
+
 def message_home(request):
     user_id = request.user.id
     message_redis = message.MessageRedis()
-    print("----- instance process complate -----")
+    print("----- instance process complete -----")
     try:
         message_user_list = message_redis.get_message_user_list(user_id)
     except:
