@@ -1,0 +1,35 @@
+{% extends 'tramino/base.html' %}
+{% load static %}
+
+{% block css %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h1>
+  メッセージを送信
+</h1>
+<div id='send'>
+  <form method="post" action="{% url 'tramino:message_room' room_name %}">
+    {% csrf_token %}
+
+    <textarea type="text" name="message_text" cols="40" rows="8">
+
+    </textarea>
+    <input type="submit" value="送信する">
+    <input type="reset" value="リセット">
+  </form>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block js %}
+
+
+{% endblock %}

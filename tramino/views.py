@@ -644,3 +644,19 @@ def message_room(request, room_name):
         'room_name': room_name,
     }
     return render(request, 'tramino/message_room.html', params)
+
+def message_template(request):
+    message_redis = message.MessageRedis()
+    if request.method == "POST":
+        my_id = str(request.user.id)
+        matchid = request.POST['matchid']
+        oponent_id = str(EventPostPool.objects.get(pk=matchid).event_host_team.user.id)
+
+        room_name = message_redis.make_room_name(my_id, oponent_id)
+        params = {
+            'room_name': room_name,
+        }
+        return render(request, 'tramino/message_template.html', params)
+
+    else:
+        return redirect('tramino:mypage')

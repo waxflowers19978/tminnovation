@@ -33,4 +33,5 @@ urlpatterns = [
     path('myteams/delete_past_game/<int:pk>/', views.PastGameDeleteView.as_view(), name='delete_past_game'),
     path('message_home/', views.message_home, name='message_home'),
     path('message_home/<str:room_name>/', views.message_room, name='message_room'),
+    path('message_template', views.message_template, name='message_template'),
 ]

@@ -250,3 +250,11 @@ class MessageRedis():
 
         admission = False
         return admission
+
+
+
+    """
+    メッセージテンプレート作成のためルームネーム作成
+    """
+    # def make_room_name(self, my_id, oponent_id):
+    #     return room_name
