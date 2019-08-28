@@ -102,6 +102,12 @@
 </div>
   <!-- <h2><a href="{% url 'tramino:team_detail' match.host_team_id %}">チームの詳細を見る</a></h2> -->
 <br>
+
+  <form action="{% url 'tramino:message_template' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="matchid" value={{ match.id }}>
+    <input type="submit" value="メッセージを作成">
+  </form>
 <br>
 
   <h2>応募済みのチーム</h2>
@@ -119,7 +125,7 @@
 --------------------↓↓↓↓応募、気になるリストに追加↓↓↓↓---------------------
   <h2>応募する</h2>
   {% for myteam in my_teams %}
-  <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data"> 
+  <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data">
   <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
   {% csrf_token %}
   <tbody>
@@ -138,7 +144,7 @@
   <h2>気になるリストに追加</h2>
 
   {% for myteam in my_teams %}
-  <form action="{% url 'tramino:match_detail' match.id %}" method="POST" enctype="multipart/form-data"> 
+  <form action="{% url 'tramino:match_detail' match.id %}" method="POST" enctype="multipart/form-data">
   <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
   {% csrf_token %}
   <tbody>
@@ -163,23 +169,21 @@
   {% block js %}
   <script>
     function clickBtn1(){
-    
+
       const teamnamechoice = document.form1.teamnamechoice;
-    
+
       // 値(数値)を取得
       const num = teamnamechoice.selectedIndex;
       //const num = document.form1.color1.selectedIndex;
-    
+
       // 値(数値)から値(value値)を取得
       const str = teamnamechoice.options[num].value;
       //const str = document.form1.color1.options[num].value;
-    
+
       document.getElementById("team_name").value = str;
-      console.log("done"); 
+      console.log("done");
     }
     </script>
-  
-    
+
+
   {% endblock %}
-  
-  

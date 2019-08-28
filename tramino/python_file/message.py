@@ -23,6 +23,17 @@ class MessageRedis():
             self.password = 'p453ee2f3174aa92a31b5044cdcbf569206a18352e4172a81cc7c98538359db86'
         return
 
+    def connect_redis(self, db_num):
+        try:
+            import local_settings
+            print('local')
+            redis_db = redis.Redis(host='localhost', port=6379, db=db_num)
+        except:
+            #本番(hroku)
+            print('production')
+            redis_db = redis.Redis(host=self.host, port=self.port, db=db_num, password=self.password)
+        return redis_db
+
     """redisに保存"""
     def save_message_to_redis(self, room_name, message):
 
@@ -36,7 +47,8 @@ class MessageRedis():
         json_dict_message = self.make_message_json_dump(dict_message)
 
         #save_message
-        redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        redis_db_0 = self.connect_redis(0)
+        # redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
         # redis_db_0 = redis.StrictRedis(host=self.host, port=self.port, db=0, password=self.password)
         redis_db_0.lpush(save_key,  json_dict_message)
 
@@ -61,7 +73,8 @@ class MessageRedis():
         save_key = self.grant_user_id_to_save_key(grant_user_id)
 
         #参照
-        redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        # redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        redis_db_0 = self.connect_redis(0)
         # redis_db_0 = redis.StrictRedis(host=self.host, port=self.port, db=0, password=self.password)
         json_message_list = redis_db_0.lrange(save_key, 0 , -1)
 
@@ -82,7 +95,8 @@ class MessageRedis():
 
     """history"""
     def save_message_history(self, user_id, message_history_list):
-        redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        redis_db_1 = self.connect_redis(1)
+        # redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
         # redis_db_1 = redis.StrictRedis(host=self.host, port=self.port, db=1, password=self.password)
         result = redis_db_1.delete(user_id)
         for history in message_history_list:
@@ -174,12 +188,15 @@ class MessageRedis():
             history_dict['latest_message'] = latest_message
             message_user_list.append(history_dict)
 
+
+
         return message_user_list
 
     def get_message_history(self, user_id):
         print("----- try get_message_history from heroku-redis -----")
         string_user_id = str(user_id)
-        redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
+        redis_db_1 = self.connect_redis(1)
+        # redis_db_1 = redis.Redis(host='localhost', port=6379, db=1)
         print("----- access succeed to heroku-redis -----")
         # redis_db_1 = redis.StrictRedis(host=self.host, port=self.port, db=1, password=self.password)
         message_history_list= redis_db_1.lrange(string_user_id, 0 , -1)
@@ -208,13 +225,36 @@ class MessageRedis():
         ord_save_key = ord_save_key.encode('utf-8')
         room_name = base64.b64encode(ord_save_key)
         room_name = str(room_name, 'utf-8')
+
         return room_name
 
     def get_latest_message(self, save_key):
-        redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
+        redis_db_0 = self.connect_redis(0)
+
+        # redis_db_0 = redis.Redis(host='localhost', port=6379, db=0)
         # redis_db_0 = redis.StrictRedis(host=self.host, port=self.port, db=0, password=self.password)
         latest_json_encoded_message = redis_db_0.lindex(save_key, 0)
         latest_json_message = latest_json_encoded_message.decode('utf-8')
         latest_json_message = latest_json_encoded_message
         latest_message = json.loads(latest_json_message)
         return latest_message
+
+    """userは自分のルームしか入れないよ"""
+    def accidental_entry(self, room_name, my_id):
+        user_id = self.room_name_to_ord_user_id(room_name)
+        grant_user_id = self.user_id_to_grant_user_id(user_id)
+
+        if grant_user_id[0] == my_id:
+            admission = True
+            return admission
+
+        admission = False
+        return admission
+
+
+
+    """
+    メッセージテンプレート作成のためルームネーム作成
+    """
+    # def make_room_name(self, my_id, oponent_id):
+    #     return room_name

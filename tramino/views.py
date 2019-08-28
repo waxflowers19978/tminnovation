@@ -606,7 +606,6 @@ def past_game_post(request):
 def message_home(request):
     user_id = request.user.id
     message_redis = message.MessageRedis()
-    print("----- instance process complete -----")
     try:
         message_user_list = message_redis.get_message_user_list(user_id)
     except:
@@ -647,3 +646,19 @@ def message_room(request, room_name):
         'room_name': room_name,
     }
     return render(request, 'tramino/message_room.html', params)
+
+def message_template(request):
+    message_redis = message.MessageRedis()
+    if request.method == "POST":
+        my_id = str(request.user.id)
+        matchid = request.POST['matchid']
+        oponent_id = str(EventPostPool.objects.get(pk=matchid).event_host_team.user.id)
+
+        room_name = message_redis.make_room_name(my_id, oponent_id)
+        params = {
+            'room_name': room_name,
+        }
+        return render(request, 'tramino/message_template.html', params)
+
+    else:
+        return redirect('tramino:mypage')
