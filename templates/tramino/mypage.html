@@ -20,7 +20,13 @@
     <a href="#" class="mypage-btn">メッセージテンプレートの作成</a>
     <a href="{% url 'tramino:user_update' %}" class="mypage-btn">ユーザー情報変更</a>
     <br><br><br><br>
-    <div><img src="{{ commander_pic.url }}" class="commander-img"/></div>    
+    <div>
+      {% if commander_pic == 0 %}
+        <img src="{% static 'tramino\mypage\images\question_mark.png'%}" class="commander-img"></a>
+      {% else %}
+        <img src="{{ commander_pic.url }}" class="commander-img"/>
+      {% endif %}
+    </div>    
     <a href="" target="_blank" class="mypage-info-footer">{{ commander_info }}</a>
 
 

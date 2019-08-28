@@ -158,7 +158,7 @@ def mypage(request):
         commander_picture = my_teams[0].commander_picture
         team_counts = len(my_teams)
     except:
-        commander_info, commander_picture, team_counts = "", "", 0
+        commander_info, commander_picture, team_counts = "", 0, 0
     params = {
         'username': username,
         'my_teams': my_teams,
