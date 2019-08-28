@@ -53,11 +53,10 @@
     <td>
         {% for object in calendar.1 %}
             {% if object.2 == 1 %}
-            <a href="{% url 'tramino:match_detail' object.0.event_post_id.id %}" style="text-decoration: none;">{{ object.0.event_post_id.event_name }}</a>
+            <div>{{ object.3 }}　<a href="{% url 'tramino:match_detail' object.0.event_post_id.id %}" style="text-decoration: none;">{{ object.0.event_post_id.event_name }}</a></div>
             {% else %}
-            <a href="{% url 'tramino:match_detail' object.0.id %}" style="text-decoration: none;">{{ object.0.event_name }}</a>
+            <div>{{ object.3 }}　<a href="{% url 'tramino:match_detail' object.0.id %}" style="text-decoration: none;">{{ object.0.event_name }}</a></div>
             {% endif %}
-
         {% endfor %}
 
     </td>

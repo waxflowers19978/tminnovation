@@ -47,7 +47,7 @@
         <div class="card3">
           <div class="box3">
             <div>
-              <p class="title2" style="padding-left:20px; ">{{ event.event_date }}</p>
+              <p class="title2" style="padding-left:20px; ">{{ event.event_date }}({{ event.dot_week }})</p>
               <p><img src="{{ event.event_picture.url }}" class="image3"></p>
             </div>
               <div>
@@ -56,7 +56,7 @@
                   <div class="content3" style="font-size:20px;">{{ event.event_name }}</div>
                   <div class="content3">プレイヤー数:{{ event.event_host_team.number_of_members }}人</div>
                   <div class="content3">{{ event.event_host_team.activity_place }}</div>
-                  <div class="content3">{{ event.event_host_team.achievement }}</div>
+                  <div class="content3">{% if event.event_host_team.achievement == None %}{% else %}{{ event.event_host_team.achievement }}{% endif %}</div>
                   <!-- <div class="content3">{{ event.event_description }}</div> -->
               </div>
           </div>

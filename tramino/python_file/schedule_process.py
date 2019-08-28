@@ -10,6 +10,25 @@ import numpy as np
 
 yobi = ["月","火","水","木","金","土","日"]
 
+def day_of_the_week(objects):
+    """ 曜日情報を各オブジェクトに追加する関数 """
+    date_list = objects.values_list('event_date',flat=True)
+    day_of_the_week_list = []
+    for date in date_list:
+        day_of_the_week_list.append(yobi[date.weekday()])
+    for i,event in enumerate(objects):
+        objects[i].dot_week = day_of_the_week_list[i]
+    return objects
+
+def match_and_deadline_day_of_the_week(objects):
+    """ 開催曜日と締め切り日の曜日を特定オブジェクトに追加する関数 """
+    the_date = objects.event_date
+    deadline_date = objects.apply_deadline
+    event_day_of_the_week, deadline_day_of_the_week = yobi[the_date.weekday()], yobi[deadline_date.weekday()]
+    objects.dot_week = event_day_of_the_week
+    objects.deadline_dotw = deadline_day_of_the_week
+    return objects
+
 
 def schedule_dataset_generator(my_teams_id,event_objects,apply_objects):
     """ カレンダー上にユーザーの募集・応募したイベントのスケジュール情報を二次元配列で出力する関数 """
@@ -56,15 +75,21 @@ def calendar_list_generator():
     one_month_after = today + relativedelta(months=1)
     one_month_ago = today - relativedelta(months=1)
     two_month_after = one_month_after + relativedelta(months=1)
+    first_day = today.replace(day=1)
     counts = 0
-
+    print((today - first_day).days + 1)
     # lm means last_month
     lm_first_day = one_month_ago.replace(day=1)
     lm_last_day = (lm_first_day + relativedelta(months=1)).replace(day=1) - timedelta(days=1)
-    counts += (lm_last_day - lm_first_day).days
-    counts += 1
+    display_last_month = True
+    if ((today - first_day).days + 1) <16:# 上旬なら先月のスケジュールを表示
+        counts += (lm_last_day - lm_first_day).days
+        counts += 1
+    else:# 下旬なら非表示
+        display_last_month = False
+
     # this month
-    first_day = today.replace(day=1)
+    # first_day = today.replace(day=1)
     last_day = (today + relativedelta(months=1)).replace(day=1) - timedelta(days=1)
     counts += (last_day - first_day).days
     counts += 1
@@ -79,7 +104,10 @@ def calendar_list_generator():
     counts += (n2m_last_day - n2m_first_day).days
     counts += 1
     calendar_data_set = []
-    the_day = lm_first_day
+    if display_last_month:
+        the_day = lm_first_day
+    else:
+        the_day = first_day
     for i in range(counts):
         weekday = the_day.weekday()
         result = [str(the_day),[],yobi[weekday],weekday]
