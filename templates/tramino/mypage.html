@@ -17,11 +17,7 @@
 
     <a href="{% url 'tramino:myteams' %}" class="mypage-btn">登録チームの追加・確認</a>
     <a href="{% url 'tramino:schedule' %}" class="mypage-btn">スケジュール</a>
-<<<<<<< HEAD
     <!-- <a href="#" class="mypage-btn">メッセージテンプレートの作成</a> -->
-=======
-    <a href="{% url 'tramino:message_template' %}" class="mypage-btn">メッセージテンプレートの作成</a>
->>>>>>> 25cef9430b0a48b55c5585855ded20c8c7880634
     <a href="{% url 'tramino:user_update' %}" class="mypage-btn">ユーザー情報変更</a>
     <br><br><br><br>
     <div>
@@ -30,17 +26,12 @@
       {% else %}
         <img src="{{ commander_pic.url }}" class="commander-img"/>
       {% endif %}
-<<<<<<< HEAD
     </div>    
       {% if commander_info == 0 %}
         <a href="" target="_blank" class="mypage-info-footer">ログインまたはチームを登録してください</a>
       {% else %}
         <a href="" target="_blank" class="mypage-info-footer">{{ commander_info }}</a>
       {% endif %}
-=======
-    </div>
-    <a href="" target="_blank" class="mypage-info-footer">{{ commander_info }}</a>
->>>>>>> 25cef9430b0a48b55c5585855ded20c8c7880634
 
 
   </div><!-- mypage-main-info -->
