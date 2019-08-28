@@ -604,7 +604,6 @@ def past_game_post(request):
 def message_home(request):
     user_id = request.user.id
     message_redis = message.MessageRedis()
-    print("----- instance process complete -----")
     try:
         message_user_list = message_redis.get_message_user_list(user_id)
     except:
