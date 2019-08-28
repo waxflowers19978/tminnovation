@@ -2,10 +2,11 @@
 {% load static%}
 
 {% block css %}
-<link rel='stylesheet' type='text/css' href="{% static 'tramino\mypage\css\message_room.css'%}" />
+<link rel='stylesheet' type='text/css' href="{% static 'tramino/message_room/css/message_room.css'%}" />
 {% endblock%}
 
 {% block content %}
+{{ my_id }}
   <div id='content'>
     <div id='name'>
       <h1>メッセージ</h1>
@@ -13,7 +14,11 @@
     </div>
     <div id='message-box'>
       {% for message in message_list %}
-        <p>{{ message.sender_id }} /// {{ message.message }}</p>
+        {% if message.sender_id == user_id %}
+          <div class=right_message>{{message.message}}</div>
+        {% else %}
+          <div class=left_message>{{message.message}}</div>
+        {% endif %}
       {% endfor %}
     </div>
     <div id='send'>

@@ -617,7 +617,7 @@ def message_home(request):
 
 
 def message_room(request, room_name):
-
+    user_id = request.user.id
     message_redis = message.MessageRedis()
 
     # user_id = message_redis.room_name_to_ord_user_id(room_name)
@@ -642,6 +642,7 @@ def message_room(request, room_name):
     params = {
         'message_list': message_list,
         'room_name': room_name,
+        'user_id': user_id,
     }
     return render(request, 'tramino/message_room.html', params)
 

@@ -18,3 +18,15 @@
 #send form {
   padding: 5px 0;
 }
+
+
+
+.right_message {
+  text-align: right;
+  padding-right: 30px;
+}
+
+.left_message {
+  text-align: left;
+  padding-left: 30px;
+}
