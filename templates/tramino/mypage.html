@@ -28,7 +28,7 @@
       {% endif %}
     </div>    
       {% if commander_info == 0 %}
-        <a href="" target="_blank" class="mypage-info-footer" style="font-size: 12px;">ログインまたはチームを登録してください</a>
+        <a href="" target="_blank" class="mypage-info-footer">ログインまたはチームを登録してください</a>
       {% else %}
         <a href="" target="_blank" class="mypage-info-footer">{{ commander_info }}</a>
       {% endif %}
@@ -37,75 +37,77 @@
   </div><!-- mypage-main-info -->
 </div><!-- mypage-main-box -->
 <!-- --------------------↓↓↓↓チームごとの募集状況、応募状況、気になるイベント、フォロー中↓↓↓↓--------------------- -->
-
-<div class="tabbox">
-  <div class="mypage-center-box">
-    <div class="tabs">
-      <div id="menu">
-        <ul>
-        {% for my_team in my_teams %}
-          <li><button><a href="#{{ my_team.tab_name }}" class="{{ my_team.tab_name }} button" onclick="ChangeTab('{{ my_team.tab_name }}'); return false;">{{ my_team.organization_name }}{{ my_team.club_name }}  </a></button></li>
-        {% endfor %}
-        </ul>
+{% if commander_info == 0 %}
+  <h2 style="text-align: center;">ログインまたはチームを登録してください</h2>
+{% else %}
+  <div class="tabbox">
+    <div class="mypage-center-box">
+      <div class="tabs">
+        <div id="menu">
+          <ul>
+          {% for my_team in my_teams %}
+            <li><button><a href="#{{ my_team.tab_name }}" class="{{ my_team.tab_name }} button" onclick="ChangeTab('{{ my_team.tab_name }}'); return false;">{{ my_team.organization_name }}{{ my_team.club_name }}  </a></button></li>
+          {% endfor %}
+          </ul>
+        </div>
       </div>
+      <br>
     </div>
-    <br>
-  </div>
-  <div class="mypage-sub-box">
-  {% for my_team in my_teams %}
+    <div class="mypage-sub-box">
+    {% for my_team in my_teams %}
 
-    <div id="{{ my_team.tab_name }}" class="tab"><br>
-        <h1>{{ my_team.organization_name }}{{ my_team.club_name }}({{ my_team.school_attribute }})</h1>
+      <div id="{{ my_team.tab_name }}" class="tab"><br>
+          <h1>{{ my_team.organization_name }}{{ my_team.club_name }}({{ my_team.school_attribute }})</h1>
 
-        <h3 class="team-action-title">募集状況</h3>
-        <table class="table">
-          <tbody>
-            {% for post_event in my_team.post_events %}
-            <tr>
-              <th><a href="{% url 'tramino:match_detail' post_event.id %}" style="text-decoration: none;">{{ post_event.event_name }}</a><a href="{% url 'tramino:edit_event' post_event.id %}" style="color: black;">更新する</a>　<a href="{% url 'tramino:delete_event' post_event.id %}" style="color: black;">削除する</a></th>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          <h3 class="team-action-title">募集状況</h3>
+          <table class="table">
+            <tbody>
+              {% for post_event in my_team.post_events %}
+              <tr>
+                <th><a href="{% url 'tramino:match_detail' post_event.id %}" style="text-decoration: none;">{{ post_event.event_name }}</a><a href="{% url 'tramino:edit_event' post_event.id %}" style="color: black;">更新する</a>　<a href="{% url 'tramino:delete_event' post_event.id %}" style="color: black;">削除する</a></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
-        <h3 class="team-action-title">応募したイベント</h3>
-        <table class="table">
-          <tbody>
-            {% for apply_event in my_team.apply_events %}
-            <tr>
-              <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}" style="text-decoration: none;">{{ apply_event.event_post_id.event_name }}</a></th>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          <h3 class="team-action-title">応募したイベント</h3>
+          <table class="table">
+            <tbody>
+              {% for apply_event in my_team.apply_events %}
+              <tr>
+                <th><a href="{% url 'tramino:match_detail' apply_event.event_post_id.id %}" style="text-decoration: none;">{{ apply_event.event_post_id.event_name }}</a></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
-        <h3 class="team-action-title">気になるイベント</h3>
-        <table class="table">
-          <tbody>
-          {% for favorite_event in my_team.favorite_events %}
-            <tr>
-              <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}" style="text-decoration: none;">{{ favorite_event.event_post_id.event_name }}</a></th>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          <h3 class="team-action-title">気になるイベント</h3>
+          <table class="table">
+            <tbody>
+            {% for favorite_event in my_team.favorite_events %}
+              <tr>
+                <th><a href="{% url 'tramino:match_detail' favorite_event.event_post_id.id %}" style="text-decoration: none;">{{ favorite_event.event_post_id.event_name }}</a></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
 
-        <h3 class="team-action-title">フォロー中のチーム</h3>
-        <table class="table">
-          <tbody>
-          {% for favorite_team in my_team.favorite_teams %}
-            <tr>
-              <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}" style="text-decoration: none;">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-    </div>
-  {% endfor %}
-  </div><!-- mypage-sub-info -->
-</div><!--tab-box-->
-
+          <h3 class="team-action-title">フォロー中のチーム</h3>
+          <table class="table">
+            <tbody>
+            {% for favorite_team in my_team.favorite_teams %}
+              <tr>
+                <th><a href="{% url 'tramino:team_detail' favorite_team.host_team_id.id %}" style="text-decoration: none;">{{ favorite_team.host_team_id.organization_name }}{{ favorite_team.host_team_id.club_name }}({{ favorite_team.host_team_id.school_attribute }})</a></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+      </div>
+    {% endfor %}
+    </div><!-- mypage-sub-info -->
+  </div><!--tab-box-->
+{% endif %}
 
 
 {% endblock %}
