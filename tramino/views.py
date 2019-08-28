@@ -158,7 +158,7 @@ def mypage(request):
         commander_picture = my_teams[0].commander_picture
         team_counts = len(my_teams)
     except:
-        commander_info, commander_picture, team_counts = "", 0, 0
+        commander_info, commander_picture, team_counts = 0, 0, 0
     params = {
         'username': username,
         'my_teams': my_teams,
@@ -197,6 +197,7 @@ def match_search(request):
         my_teams_id.append(my_team.id)
     for i,my_team_id in enumerate(my_teams_id):
         event_post_pool = event_post_pool.exclude(event_host_team=my_team_id)
+    event_post_pool = day_of_the_week(event_post_pool)
     params = {
         'events': event_post_pool,
         'username': username,
@@ -217,6 +218,7 @@ def match_detail(request, event_id):
     for my_team in my_teams:
         my_teams_name.append(my_team.organization_name)
     match.host_team_id = match.event_host_team.id# イベント詳細ページからチーム詳細に飛ぶためのURL生成に必要なイベントホストチームID
+    match = match_and_deadline_day_of_the_week(match)
     applies = EventApplyPool.objects.all().filter(event_post_id=event_id)
     if request.method == 'POST':
         if request.POST['page_name'] == 'event_favorite':

@@ -49,10 +49,12 @@
 {% for team in teams %}
   <a href="{% url 'tramino:team_detail' team_id=team.id %}" style="text-decoration: none;">
     <div class="card2">
-      <div class="box2">
+      <div class="box2" style="color:black;">
           <img src="{{team.commander_picture.url}}" class="icon2">
           <div>
             <div class="title2">{{ team.organization_name }}{{ team.club_name }}({{ team.school_attribute }})</div>
+            <div>{{ team.prefectures_name }}{{ team.city_name }}　　{% if team.achievement == None %}{% else %}{{ team.achievement }}{% endif %}</div>
+            <div>プレイヤー：{{ team.number_of_members }}人</div>
           </div>
       </div>
       <img src="{{ team.team_picture.url }}" class="image2">
