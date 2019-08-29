@@ -379,7 +379,7 @@ def done(request):
                 event.event_host_team = TeamInformations.objects.get(organization_name=posted_team_name)
                 event.event_name = form.cleaned_data['event_name']
                 event.event_description = form.cleaned_data['event_description']
-                event.event_picture = form.cleaned_data['event_picture']
+                # event.event_picture = form.cleaned_data['event_picture']
                 event.event_date = form.cleaned_data['event_date']
                 event.apply_deadline = form.cleaned_data['apply_deadline']
                 eventdates = event.event_date
@@ -647,6 +647,7 @@ def message_room(request, room_name):
         'user_id': user_id,
     }
     return render(request, 'tramino/message_room.html', params)
+
 
 def message_template(request):
     message_redis = message.MessageRedis()

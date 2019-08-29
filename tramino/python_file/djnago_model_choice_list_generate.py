@@ -10,7 +10,7 @@ print("mode 1 output:['1','1'],[2','2'],[3','3']")
 print("mode 2 output:'1','2','3'")
 print("mode 3 output:('a', 'a'), ('b', 'b')")
 
-mode = int(input("please choise mode : input 1 or 2 : "))
+mode = int(input("please choise mode : input 1 or 2 or 3 : "))
 
 if mode ==1:
     result = "['"
@@ -91,3 +91,21 @@ else:
 # event_picture
 # event_date
 # apply_deadline
+
+
+# サッカー
+# 野球
+# ソフトボール
+# テニス
+# ソフトテニス
+# バレーボール
+# バスケ
+# バドミントン
+# 柔道
+# 剣道
+# 卓球
+
+# 校内のみ
+# 校外のみ
+# 両方
+# その他

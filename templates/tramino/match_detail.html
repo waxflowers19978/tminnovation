@@ -94,7 +94,13 @@
           <p class="name2"><a href="{% url 'tramino:team_detail' match.host_team_id %}" style="text-decoration: none;">{{ match.event_host_team.organization_name }}{{ match.event_host_team.club_name }}({{ match.event_host_team.school_attribute }})</a></p>
       </div>
   </div>
-  <img src="{{ match.event_picture.url }}" class="image2">
+  {% if match.event_host_team.activity_place_picture != "SOME STRING" %}
+  <img src="{{ match.event_host_team.activity_place_picture.url }}" class="image2">
+  {% elif match.event_host_team.team_picture != "SOME STRING" %}
+  <img src="{{ match.event_host_team.team_picture.url }}" class="image2">
+  {% else %}
+  <img src="{% static 'tramino\mypage\images\question_mark.png'%}" class="image2">
+  {% endif %}
   <p class="content2">{{match.event_description}}</p>
   <div class="title2" style="width:800px;text-align:left;">
   <div style="text-align:right;float:right;">あと〇〇日！！</div>申し込み期限 : {{match.apply_deadline}}({{ match.deadline_dotw }})</div>
