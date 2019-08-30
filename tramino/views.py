@@ -637,6 +637,9 @@ def message_room(request, room_name):
     if request.method == 'POST':
         message_text = request.POST['message_text']
         message_redis.save_message_to_redis(room_name, message_text)
+        matchid = request.POST['matchid']
+        opponent_id = request.POST['opponent_id']
+        print("Working normally")
 
     # request_path = request.path
     # room_name = request_path.replace('/tramino/message_home/', '')[:-1]
@@ -659,6 +662,8 @@ def message_template(request):
         room_name = message_redis.make_room_name(my_id, oponent_id)
         params = {
             'room_name': room_name,
+            'matchid':matchid,
+            'opponent_id':oponent_id,
         }
         return render(request, 'tramino/message_template.html', params)
 
