@@ -1,4 +1,5 @@
 #from django.shortcuts import render
+from django.http.response import JsonResponse
 from django.http.response import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -38,6 +39,9 @@ from django.http import Http404, HttpResponseBadRequest
 from django.conf import settings
 from django.template.loader import render_to_string
 # Create your views here.
+
+import json
+import os
 
 User = get_user_model()
 
@@ -358,10 +362,37 @@ def team_detail(request, team_id):
 def create(request):
     form = TeamInfoForm()
     params = {
-    'form': form,
+        'form': form,
     }
     return render(request, 'tramino/create.html', params)
 
+def school_list(request):
+    #     return redirect('tramino:create')
+    school_name = request.GET.get(key="school_name", default='None')
+    # if school_name == '':
+    #     school_name == 'None'
+    #     print('afhoahgoahohgaoh')
+    # print(school_name)
+    # print(len(school_name))
+
+    main_path = os.getcwd()
+    h_s_path = '/tramino/school_list/high_school_list.json'
+    f = open(main_path + h_s_path, 'r')
+    h_s_list = json.load(f)
+    f.close()
+    h_s_list = [school for school in h_s_list if school_name in school]
+
+    j_h_s_path = '/tramino/school_list/junior_high_school_list.json'
+    f = open(main_path + j_h_s_path, 'r')
+    j_h_s_list = json.load(f)
+    f.close()
+    j_h_s_list = [school for school in j_h_s_list if school_name in school]
+
+    school_list = h_s_list + j_h_s_list
+    # school_list = h_s_list
+
+    ret = {"data": school_list}
+    return JsonResponse(ret)
 
 def done(request):
     username = request.user.username

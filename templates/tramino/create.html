@@ -10,8 +10,17 @@
 {% block content %}
   <h1>チーム情報登録</h1>
   <section id="school_vue">
-    <input type="text" @input="onInput" v-model="school_name">
+    <!-- <button v-on:click="greet">Greet</button> -->
+    学校名を入力してください:
+    <input v-on:change="aiueo" v-model='school_name'><br><br>
     [[school_name]]
+    [[ school_list ]]
+
+    <br>
+    <br>
+    <hr>
+
+    <br>
     <table class="table">
       <form action="{% url 'tramino:mypage' %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
