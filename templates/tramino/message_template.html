@@ -13,27 +13,50 @@
 {% block content %}
 <div id='send'>
   <h1>
-    メッセージを送信
+    応募用メッセージを送信
   </h1>
-  <form method="post" action="{% url 'tramino:message_room' room_name %}">
+  <form method="post" name="form1" action="{% url 'tramino:message_room' room_name %}">
     {% csrf_token %}
-
+      <div>応募元のチームを選択：
+        <select name="teamnamechoice" id="name">
+          {% for my_team_name in my_teams_name %}
+            <option name="my_team_name" value="{{ my_team_name }}">{{ my_team_name }}</option>
+          {% endfor %}
+        </select>  
+      </div>
     <textarea id="kanso" name="message_text" cols="40" rows="4" maxlength="20"
     placeholder="初めまして。〇〇です&#13;&#10;是非〇〇さんと練習試合をしたいと思っています。&#13;&#10;よろしくお願いします。"></textarea>
     <input type="hidden" name="matchid" value={{ matchid }}>
-    <input type="hidden" name="matchid" value={{ opponent_id }}>
-    <input type="submit" value="送信する">
+    <input type="submit" value="メッセージを送信してイベントに応募する" onclick="clickBtn1()">
     <input type="reset" value="リセット">
+    <input type="hidden" id="team_name" name="team_name" value="">
   </form>
 </div>
-
-
 
 
 
 {% endblock %}
 
 {% block js %}
+<script>
+    // 選択されたチームをid="team_name"のvalueとして設定するための関数
+    function clickBtn1(){
+  
+    const teamnamechoice = document.form1.teamnamechoice;
+  
+    // 値(数値)を取得
+    const num = teamnamechoice.selectedIndex;
+    //const num = document.form1.color1.selectedIndex;
+  
+    // 値(数値)から値(value値)を取得
+    const str = teamnamechoice.options[num].value;
+    //const str = document.form1.color1.options[num].value;
+  
+    document.getElementById("team_name").value = str;
+    console.log("done"); 
+  }
+  </script>
 
-
+  
 {% endblock %}
+

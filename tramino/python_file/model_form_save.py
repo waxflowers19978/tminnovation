@@ -4,11 +4,12 @@
 This file is a collection of functions
 that save data in the model.
 """
-from ..models import TeamInformations, User
-from ..forms import TeamInfoForm
+from ..models import TeamInformations, User, EventApplyPool, EventPostPool
+from ..forms import TeamInfoForm, EventPostPoolForm
+import datetime
 
 
-def TeamInfoSave(request):
+def TeamInfoSave(request):#mypage関数内で発火
     user_id = request.user.id
     form = TeamInfoForm(request.POST, request.FILES)
     if form.is_valid():
@@ -33,3 +34,37 @@ def TeamInfoSave(request):
         team.save()
 
     return
+
+def EventApplySave_when_apply_message_saved(request):#message_room関数内で発火
+    event_id = request.POST['matchid']
+    posted_team_name = request.POST['team_name']
+    apply = EventApplyPool()
+    apply.event_post_id = EventPostPool.objects.get(id=event_id)
+    apply.guest_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
+    apply.save()
+
+def EventPostSave(request,posted_team_name):#done関数内で発火
+    form = EventPostPoolForm(request.POST, request.FILES)
+    message = ""
+    if form.is_valid():
+        event = EventPostPool()
+        event.event_host_team = TeamInformations.objects.get(organization_name=posted_team_name)
+        event.event_name = form.cleaned_data['event_name']
+        event.event_description = form.cleaned_data['event_description']
+        # event.event_picture = form.cleaned_data['event_picture']
+        event.event_date = form.cleaned_data['event_date']
+        event.apply_deadline = form.cleaned_data['apply_deadline']
+        eventdates = event.event_date
+        applydeadline = event.apply_deadline
+        today = datetime.date.today()
+        if today<applydeadline and applydeadline<eventdates:
+            event.save()
+            message = 'イベントの募集を投稿しました。'
+        else:
+            message = '正しい日付を入力してください'
+    else:
+        message = '投稿フォームのパラメータに不備があります。'
+        pass
+
+    return message
+
