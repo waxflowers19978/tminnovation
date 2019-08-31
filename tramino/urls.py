@@ -10,6 +10,7 @@ urlpatterns = [
     path('mypage/', views.mypage, name='mypage'),
     path('schedule/', views.schedule, name='schedule'),
     path('match_search/', views.match_search, name='match_search'),
+    path('match_refine/', views.match_refine, name='match_refine'),
     path('match_detail/<int:event_id>/', views.match_detail, name='match_detail'),
     path('match_detail/update/<int:pk>/', views.EventUpdateView.as_view(), name='edit_event'),
     path('match_detail/delete/<int:pk>/', views.EventDeleteView.as_view(), name='delete_event'),

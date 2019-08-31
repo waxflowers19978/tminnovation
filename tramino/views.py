@@ -22,7 +22,7 @@ from .python_file.model_form_save import *
 from .python_file import message
 from .python_file.profile_complete_percent import *
 from .python_file.schedule_process import *
-
+from .python_file.model_to_dict import *
 
 """ 08/10以降追加 """
 from django.shortcuts import get_object_or_404, resolve_url
@@ -35,6 +35,7 @@ import smtplib
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
+from django.core import serializers
 from django.http import Http404, HttpResponseBadRequest
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -193,21 +194,47 @@ def schedule(request):
 
 
 def match_search(request):
-    username = request.user.username
-    event_post_pool = EventPostPool.objects.all()
-    my_teams = TeamInformations.objects.filter(user=request.user.id)
-    my_teams_id = []# 自分のチームIDを持つイベントを表示しないようにする
-    for my_team in my_teams:
-        my_teams_id.append(my_team.id)
-    for i,my_team_id in enumerate(my_teams_id):
-        event_post_pool = event_post_pool.exclude(event_host_team=my_team_id)
-    event_post_pool = day_of_the_week(event_post_pool)
-    params = {
-        'events': event_post_pool,
-        'username': username,
-    }
+
+    # else:
+    # event_post_pool = EventPostPool.objects.all()
+    #
+    # username = request.user.username
+    # my_teams = TeamInformations.objects.filter(user=request.user.id)
+    # my_teams_id = []# 自分のチームIDを持つイベントを表示しないようにする
+    # for my_team in my_teams:
+    #     my_teams_id.append(my_team.id)
+    # for i,my_team_id in enumerate(my_teams_id):
+    #     event_post_pool = event_post_pool.exclude(event_host_team=my_team_id)
+    # event_post_pool = day_of_the_week(event_post_pool)
+    # params = {
+    #     'events': event_post_pool,
+    #     'username': username,
+    # }
+    params = {}
     return render(request, 'tramino/match_search.html', params)
 
+
+def match_refine(request):
+    if request.method == "POST":
+        host_team = request.POST['event_host_team']
+        prefectures = request.POST['erea']
+        kind = request.POST['kind']
+        event_post_pool = EventPostPool.objects.none()
+        teams = TeamInformations.objects.filter(organization_name__contains=host_team)
+        teams = teams.filter(prefectures_name__contains=prefectures)
+        teams = teams.filter(club_name__contains=kind)
+
+        for team in teams:
+            event_post_pool = event_post_pool | team.event_posts.all()
+
+    # for i in event_post_pool:
+    #     print(i.event_host_team.club_name)
+
+    event_post_pool = day_of_the_week(event_post_pool)
+    event_post_pool = make_model_list(event_post_pool)
+    ret = {"data": event_post_pool}
+    return JsonResponse(ret)
+    # return HttpResponse(event_post_pool, content_type="text/json-comment-filtered")
 
 def match_detail(request, event_id):
     """
@@ -367,13 +394,8 @@ def create(request):
     return render(request, 'tramino/create.html', params)
 
 def school_list(request):
-    #     return redirect('tramino:create')
+
     school_name = request.GET.get(key="school_name", default='None')
-    # if school_name == '':
-    #     school_name == 'None'
-    #     print('afhoahgoahohgaoh')
-    # print(school_name)
-    # print(len(school_name))
 
     main_path = os.getcwd()
     h_s_path = '/tramino/school_list/high_school_list.json'
