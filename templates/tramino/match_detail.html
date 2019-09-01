@@ -128,24 +128,7 @@
   </table>
 
 
---------------------↓↓↓↓応募、気になるリストに追加↓↓↓↓---------------------
-  <h2>応募する</h2>
-  {% for myteam in my_teams %}
-  <form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data">
-  <!-- <form method="post" action="{% url 'tramino:done' %}"> -->
-  {% csrf_token %}
-  <tbody>
-    <tr>
-      <th><input class="btn btn-primary" type="submit" value="{{ myteam.organization_name }}{{ myteam.club_name }}({{ myteam.school_attribute }})で応募する"></th>
-      <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
-    </tr>
-  </tbody>
-  <input type="hidden" name="page_name" value="event_apply">
-  <input type="hidden" name="event_id" value={{match.id}}>
-  <input type="hidden" name="apply_team_id" value={{myteam.id}}>
-  </form>
-  {% endfor %}
-
+--------------------↓↓↓↓気になるリストに追加↓↓↓↓---------------------
   <br>
   <h2>気になるリストに追加</h2>
 
