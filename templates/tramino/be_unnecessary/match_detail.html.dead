@@ -1,0 +1,16 @@
+<h2>応募する</h2>
+{% for myteam in my_teams %}
+<form action="{% url 'tramino:done' %}" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+<tbody>
+  <tr>
+    <th><input class="btn btn-primary" type="submit" value="{{ myteam.organization_name }}{{ myteam.club_name }}({{ myteam.school_attribute }})で応募する"></th>
+    <td><input class="btn btn-secondary" type="reset" value="Reset"></td>
+  </tr>
+</tbody>
+<input type="hidden" name="page_name" value="event_apply">
+<input type="hidden" name="event_id" value={{match.id}}>
+<input type="hidden" name="apply_team_id" value={{myteam.id}}>
+</form>
+{% endfor %}
+

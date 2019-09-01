@@ -23,6 +23,9 @@ from .python_file import message
 from .python_file.profile_complete_percent import *
 from .python_file.schedule_process import *
 from .python_file.model_to_dict import *
+from .python_file.email_process import *
+from .python_file.views_params_generator import *
+
 
 """ 08/10以降追加 """
 from django.shortcuts import get_object_or_404, resolve_url
@@ -434,38 +437,8 @@ def done(request):
             if posted_team_name == '':
                 message = 'チームがありません。対戦相手の募集にはチームの登録が必要です。'
                 params = {'message': message}
-                return render(request, 'tramino/done.html', params)
-            form = EventPostPoolForm(request.POST, request.FILES)
-            message = ""
-            if form.is_valid():
-                event = EventPostPool()
-                event.event_host_team = TeamInformations.objects.get(organization_name=posted_team_name)
-                event.event_name = form.cleaned_data['event_name']
-                event.event_description = form.cleaned_data['event_description']
-                # event.event_picture = form.cleaned_data['event_picture']
-                event.event_date = form.cleaned_data['event_date']
-                event.apply_deadline = form.cleaned_data['apply_deadline']
-                eventdates = event.event_date
-                applydeadline = event.apply_deadline
-                today = datetime.date.today()
-                if today<eventdates and today<applydeadline:
-                    event.save()
-                else:
-                    message = '正しい日付を入力してください'
-                message = 'イベントの募集を投稿しました。'
-            else:
-                message = '投稿フォームのパラメータに不備があります。'
-                pass
-
-        elif request.POST['page_name'] == 'event_apply':
-
-            event_id = request.POST['event_id']
-            apply_team_id = request.POST['apply_team_id']
-            apply = EventApplyPool()
-            apply.event_post_id = EventPostPool.objects.get(id=event_id)
-            apply.guest_team_id = TeamInformations.objects.get(id=apply_team_id)
-            apply.save()
-            message = 'イベントに応募しました。'
+                return render(request, 'tramino/done.html', params)            
+            message = EventPostSave(request,posted_team_name)
 
         params = {
             'message': message,
@@ -700,9 +673,7 @@ def message_room(request, room_name):
     if request.method == 'POST':
         message_text = request.POST['message_text']
         message_redis.save_message_to_redis(room_name, message_text)
-        matchid = request.POST['matchid']
-        opponent_id = request.POST['opponent_id']
-        print("Working normally")
+        EventApplySave_when_apply_message_saved(request)
 
     # request_path = request.path
     # room_name = request_path.replace('/tramino/message_home/', '')[:-1]
@@ -721,12 +692,13 @@ def message_template(request):
         my_id = str(request.user.id)
         matchid = request.POST['matchid']
         oponent_id = str(EventPostPool.objects.get(pk=matchid).event_host_team.user.id)
+        my_teams_name = generate_my_teams_name_list(request.user.id)
 
         room_name = message_redis.make_room_name(my_id, oponent_id)
         params = {
             'room_name': room_name,
             'matchid':matchid,
-            'opponent_id':oponent_id,
+            'my_teams_name':my_teams_name,
         }
         return render(request, 'tramino/message_template.html', params)
 
