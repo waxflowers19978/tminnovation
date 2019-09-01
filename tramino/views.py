@@ -674,6 +674,8 @@ def message_room(request, room_name):
         message_text = request.POST['message_text']
         message_redis.save_message_to_redis(room_name, message_text)
         EventApplySave_when_apply_message_saved(request)
+        send_mail_when_event_applied(request)
+
 
     # request_path = request.path
     # room_name = request_path.replace('/tramino/message_home/', '')[:-1]
