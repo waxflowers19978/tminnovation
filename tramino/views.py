@@ -215,26 +215,36 @@ def match_search(request):
 
 
 def match_refine(request):
+    """
+    　募集を絞る時のajax関数
+    """
     if request.method == "POST":
         host_team = request.POST['event_host_team']
         prefectures = request.POST['prefecture']
-        kind = request.POST['club_name']
+        club_name = request.POST['club_name']
+        number_of_members = request.POST['number_of_members']
+        achievement = request.POST['achievement']
+        date1 = request.POST['date1']
+        date2 = request.POST['date2']
+
+
         event_post_pool = EventPostPool.objects.none()
         teams = TeamInformations.objects.filter(organization_name__contains=host_team)
         teams = teams.filter(prefectures_name__contains=prefectures)
-        teams = teams.filter(club_name__contains=kind)
+        teams = teams.filter(club_name__contains=club_name)
+
+        teams = teams.filter(achievement__contains=achievement)
 
         for team in teams:
             event_post_pool = event_post_pool | team.event_posts.all()
 
-    # for i in event_post_pool:
-    #     print(i.event_host_team.club_name)
+        event_post_pool = event_post_pool.filter(event_date__range=[date1, date2])
 
     event_post_pool = day_of_the_week(event_post_pool)
     event_post_pool = make_model_list(event_post_pool)
     ret = {"data": event_post_pool}
     return JsonResponse(ret)
-    # return HttpResponse(event_post_pool, content_type="text/json-comment-filtered")
+
 
 def match_detail(request, event_id):
     """

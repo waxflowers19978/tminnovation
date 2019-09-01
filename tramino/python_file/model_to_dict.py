@@ -5,7 +5,7 @@ import json
 def make_model_list(objects):
     event_list = []
     for obj in objects:
-        print("{}:{}".format(obj, obj.event_host_team.club_name))
+        # print("{}:{}".format(obj, obj.event_host_team.club_name))
         model_dict = {}
         # model_dict['event_host_name'] = obj
         model_dict['pk'] = obj.id
@@ -14,6 +14,7 @@ def make_model_list(objects):
         model_dict['prefectures_name'] = obj.event_host_team.prefectures_name
         model_dict['city_name'] = obj.event_host_team.city_name
         model_dict['number_of_members'] = obj.event_host_team.number_of_members
+        model_dict['achievement'] = obj.event_host_team.achievement
         model_dict['activity_place'] = obj.event_host_team.activity_place
         model_dict['event_name']= obj.event_name
         model_dict['event_date'] = obj.event_date

@@ -50,10 +50,10 @@
   <section id='match_search_vue'>
 
     <div id="search_box">
-      <label for="event_host_team">チーム名: </label>
+      <label for="event_host_team">学校名: </label>
       <input id="event_host_team" v-model="event_host_team"><br>
 
-      <label for="prefecture">エリア: </label>
+      <label for="prefecture">都道府県名: </label>
       <select v-model="prefecture" id="prefecture">
         <option value="">全て</option>
         <option v-for="prefecture in prefecture_list" v-bind:value="prefecture[1]">
@@ -61,14 +61,33 @@
         </option>
       </select><br>
 
-
-      <label for="club_name">種類: </label>
+      <label for="club_name">競技名: </label>
       <select v-model="club_name" id="club_name">
         <option value="">全て</option>
         <option v-for="club_name in club_name_list" v-bind:value="club_name[1]">
           [[ club_name[0] ]]
         </option>
-      </select>
+      </select><br>
+
+      <!-- <label for="number_of_members">人数: </label>
+      <select v-model="number_of_members" id="number_of_members">
+        <option value="">全て</option>
+        <option v-for="number_of_members in number_of_members_list" v-bind:value="number_of_members[0]">
+          [[ number_of_members[1] ]]
+        </option>
+      </select><br> -->
+
+      <label for="team_level">チームレベル: </label>
+      <select v-model="team_level" id="team_level">
+        <option value="">全て</option>
+        <option v-for="team_level in team_level_list" v-bind:value="team_level[0]">
+          [[ team_level[1] ]]
+        </option>
+      </select><br>
+
+
+      <label for="date1">日付の範囲選択: </label><input type="date" v-model="date1" value="2019-09-02" id="date1">〜
+      <input type="date" v-model="date2" id="date2"><br>
 
       <button v-on:click="search">検索</button>
     </div>
@@ -83,6 +102,7 @@
               <div class="box3">
                 <div>
                   <p class="title2" style="padding-left:20px; ">[[ event.event_date ]]([[ event.dot_week ]])</p>
+                  [[ event.achievement ]]
                   <!-- <p>[[ event.activity_place_picture_url ]]</p> -->
                   <section v-if="event.activity_place_picture_url.slice(-6,) != 'STRING'">
                     <p>
