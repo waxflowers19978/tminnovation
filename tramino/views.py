@@ -217,8 +217,8 @@ def match_search(request):
 def match_refine(request):
     if request.method == "POST":
         host_team = request.POST['event_host_team']
-        prefectures = request.POST['erea']
-        kind = request.POST['kind']
+        prefectures = request.POST['prefecture']
+        kind = request.POST['club_name']
         event_post_pool = EventPostPool.objects.none()
         teams = TeamInformations.objects.filter(organization_name__contains=host_team)
         teams = teams.filter(prefectures_name__contains=prefectures)

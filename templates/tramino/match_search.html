@@ -39,6 +39,7 @@
   #search_box {
     border: 2px solid black;
     padding: 10px;
+    padding-left: 100px;
   }
   </style>
 
@@ -47,24 +48,32 @@
 {% block content %}
   <h1>試合を探す</h1>
   <section id='match_search_vue'>
+
     <div id="search_box">
       <label for="event_host_team">チーム名: </label>
       <input id="event_host_team" v-model="event_host_team"><br>
-      <label for="erea">エリア: </label>
-      <input id="erea" v-model="erea"><br>
-      <label for="kind">種類: </label>
-      <input id="kind" v-model="kind">
+
+      <label for="prefecture">エリア: </label>
+      <select v-model="prefecture" id="prefecture">
+        <option value="">全て</option>
+        <option v-for="prefecture in prefecture_list" v-bind:value="prefecture[1]">
+          [[ prefecture[0] ]]
+        </option>
+      </select><br>
+
+
+      <label for="club_name">種類: </label>
+      <select v-model="club_name" id="club_name">
+        <option value="">全て</option>
+        <option v-for="club_name in club_name_list" v-bind:value="club_name[1]">
+          [[ club_name[0] ]]
+        </option>
+      </select>
 
       <button v-on:click="search">検索</button>
     </div>
     <br>
     <hr>
-    <!-- <ul id="example-1">
-      <li v-for="event in events">
-        [[ event.fields.event_name ]]
-      </li>
-    </ul> -->
-
 
     <table class="table">
       <tbody>
@@ -105,40 +114,6 @@
         </section>
       </tbody>
     </table>
-
-    <!-- <table class="table">
-      <tbody>
-      {% for event in events %}
-        <a href="{% url 'tramino:match_detail' event_id=event.id %}" style="text-decoration: none;">
-          <div class="card3">
-            <div class="box3">
-              <div>
-                <p class="title2" style="padding-left:20px; ">{{ event.event_date }}({{ event.dot_week }})</p>
-                <p>
-                {% if event.event_host_team.activity_place_picture != "SOME STRING" %}
-                  <img src="{{ event.event_host_team.activity_place_picture.url }}" class="image3">
-                {% elif event.event_host_team.team_picture != "SOME STRING" %}
-                  <img src="{{ event.event_host_team.team_picture.url }}" class="image3">
-                {% else %}
-                  <img src="{% static 'tramino\mypage\images\question_mark.png'%}" class="image3">
-                {% endif %}
-                </p>
-              </div>
-                <div>
-                    <div class="title3">{{ event.event_host_team.organization_name }}{{ event.event_host_team.club_name }}</div>
-                    <div class="content3" style="color:darkgray;">{{ event.event_host_team.prefectures_name }}{{ event.event_host_team.city_name }}</div>
-                    <div class="content3" style="font-size:20px;">{{ event.event_name }}</div>
-                    <div class="content3">プレイヤー数:{{ event.event_host_team.number_of_members }}人</div>
-                    <div class="content3">{{ event.event_host_team.activity_place }}</div>
-                    <div class="content3">{% if event.event_host_team.achievement == None %}{% else %}{{ event.event_host_team.achievement }}{% endif %}</div>
-                </div>
-            </div>
-          </div>
-        </a>
-        {% endfor %}
-      </tbody>
-    </table> -->
-
   </section>
 
 {% endblock %}
