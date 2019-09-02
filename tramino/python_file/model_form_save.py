@@ -7,6 +7,7 @@ that save data in the model.
 from ..models import TeamInformations, User, EventApplyPool, EventPostPool
 from ..forms import TeamInfoForm, EventPostPoolForm
 import datetime
+from .email_process import *
 
 
 def TeamInfoSave(request):#mypage関数内で発火
@@ -42,6 +43,8 @@ def EventApplySave_when_apply_message_saved(request):#message_room関数内で�
     apply.event_post_id = EventPostPool.objects.get(id=event_id)
     apply.guest_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
     apply.save()
+    send_mail_when_event_applied(request)
+
 
 def EventPostSave(request,posted_team_name):#done関数内で発火
     form = EventPostPoolForm(request.POST, request.FILES)

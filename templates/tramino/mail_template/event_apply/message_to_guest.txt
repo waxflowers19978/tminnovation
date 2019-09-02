@@ -1,5 +1,5 @@
 試合への応募が完了しました
 
-募集元のチーム
-開催日
+募集元のチーム情報：{{ event.event_host_team.organization_name }}{{ event.event_host_team.club_name }}部
+開催日：{{ event.event_date }}
 

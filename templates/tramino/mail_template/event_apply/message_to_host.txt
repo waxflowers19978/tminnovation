@@ -1,9 +1,12 @@
-〇〇様からの応募がありました。
-メッセージ
+{{ event.event_host_team.commander_name }}様
+日頃よりとらみのをご利用いただきありがとうございます。
+
+この度は、{{ event.event_host_team.commander_name }}様が現在募集中のイベント、「{{ event.event_name }}」への新規応募がございましたため、ご連絡差し上げました。
+◇応募元の情報◇
+チーム情報：{{ guest.organization_name }}{{ guest.club_name }}部
+指導者情報：{{ guest.commander_name }}
 ~~~~~~~~~~~~~~~~~~~
-
-
-
+メッセージ
 ~~~~~~~~~~~~~~~~~~~
 
 以下のリンクからご返信ください。
