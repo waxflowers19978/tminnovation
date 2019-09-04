@@ -9,7 +9,6 @@ from ..forms import TeamInfoForm, EventPostPoolForm
 import datetime
 from .email_process import *
 
-
 def TeamInfoSave(request):#mypage関数内で発火
     user_id = request.user.id
     form = TeamInfoForm(request.POST, request.FILES)
@@ -38,12 +37,30 @@ def TeamInfoSave(request):#mypage関数内で発火
 
 def EventApplySave_when_apply_message_saved(request):#message_room関数内で発火
     event_id = request.POST['matchid']
-    posted_team_name = request.POST['team_name']
-    apply = EventApplyPool()
-    apply.event_post_id = EventPostPool.objects.get(id=event_id)
-    apply.guest_team_id = TeamInformations.objects.get(organization_name=posted_team_name)
-    apply.save()
-    send_mail_when_event_applied(request)
+    applier_team_name = request.POST['team_name']
+
+    event_apply_status = ''
+    applier_team_id = list(TeamInformations.objects.filter(organization_name=applier_team_name).values_list('id',flat=True))[0]
+    # try:
+    exist_apply = EventApplyPool.objects.filter(event_post_id=event_id)# 応募リクエストのあったイベントIDを持つアプライオブジェクトを取得
+    exist_apply_counts = len(exist_apply)
+    if exist_apply_counts >= 1:
+        exist_applier_ids = list(exist_apply.filter(guest_team_id=applier_team_id).values_list('guest_team_id',flat=True))
+        if applier_team_id in exist_applier_ids:
+            event_apply_status = 'ご指定のチームは当イベントに対して既に応募済みです。別のチームを指定して応募する、またはメッセージ機能による直接のご連絡をお願いいたします。'
+        else:
+            apply = EventApplyPool()
+            apply.event_post_id = EventPostPool.objects.get(id=event_id)
+            apply.guest_team_id = TeamInformations.objects.get(organization_name=applier_team_name)
+            apply.save()
+            send_mail_when_event_applied(request)# メール通知
+            event_apply_status = 'new_apply'
+    else:
+        event_apply_status = 'イベントが存在しません'
+    # except:
+        # event_apply_status = '予期せぬエラーが発生しました。もう一度お試しください。'
+    return event_apply_status
+
 
 
 def EventPostSave(request,posted_team_name):#done関数内で発火

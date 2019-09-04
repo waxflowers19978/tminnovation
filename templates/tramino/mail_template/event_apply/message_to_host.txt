@@ -5,12 +5,19 @@
 ◇応募元の情報◇
 チーム情報：{{ guest.organization_name }}{{ guest.club_name }}部
 指導者情報：{{ guest.commander_name }}
-~~~~~~~~~~~~~~~~~~~
-メッセージ
-~~~~~~~~~~~~~~~~~~~
 
-以下のリンクからご返信ください。
-URL：
+◇募集元の情報◇
+チーム情報：{{ event.event_host_team.organization_name }}{{ event.event_host_team.club_name }}部
+開催日：{{ event.event_date }}
+会場：{{ event.event_place }}
+駐車場：{{ event.parking }}
+
+=========================
+{{ message }}
+=========================
+
+メッセージ機能からご返信ください。
+URL：{{ protocol}}://{{ domain }}{% url 'tramino:mypage' %}
 
 当該イベントにおける募集状況の確認はこちらから
-URL：
+URL：{{ protocol}}://{{ domain }}{% url 'tramino:match_detail' event_id=event.id %}

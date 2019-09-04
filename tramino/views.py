@@ -640,14 +640,14 @@ def message_room(request, room_name):
     # print(type(my_id))
     # if my_id != grant_user_id[0]:
     #     return render(request, 'tramino/message_room.html')
-
-
     if request.method == 'POST':
         message_text = request.POST['message_text']
         message_redis.save_message_to_redis(room_name, message_text)
-        EventApplySave_when_apply_message_saved(request)
-
-
+        event_apply_status = EventApplySave_when_apply_message_saved(request)
+        if event_apply_status != "new_apply":
+            params = generate_match_detail_params(request)
+            params['event_apply_status'] = event_apply_status
+            return render(request, 'tramino/match_detail.html', params)            
     # request_path = request.path
     # room_name = request_path.replace('/tramino/message_home/', '')[:-1]
     message_list = message_redis.get_message_from_redis(room_name)

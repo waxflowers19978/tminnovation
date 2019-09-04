@@ -1,5 +1,18 @@
-試合への応募が完了しました
+試合への応募が完了しました。
 
 募集元のチーム情報：{{ event.event_host_team.organization_name }}{{ event.event_host_team.club_name }}部
 開催日：{{ event.event_date }}
+会場：{{ event.event_place }}
+駐車場：{{ event.parking }}
 
+送信したメッセージ
+=========================
+{{ message }}
+=========================
+
+アプリ上にて先方様からご返信がありました際、こちら（{{ user.email }}）のアドレスに通知をさせていただきます。
+※通知の設定はアプリ上で変更できます。
+※※まだできません。
+
+応募状況の確認はこちらから
+URL：{{ protocol}}://{{ domain }}{% url 'tramino:mypage' %}

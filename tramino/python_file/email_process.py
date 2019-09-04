@@ -32,6 +32,7 @@ def send_mail_when_event_applied(request):# model_form_save.pyのEventPostSave�
     event_id = request.POST['matchid']
     guest_object = TeamInformations.objects.get(organization_name=posted_team_name)
     event_object = EventPostPool.objects.get(id=event_id)
+    message = request.POST['message_text']
     # --- process for guest user ---    
     user = request.user
     # アクティベーションURLの送付
@@ -44,13 +45,14 @@ def send_mail_when_event_applied(request):# model_form_save.pyのEventPostSave�
         'user': user,
         'event': event_object,
         'guest': guest_object,
+        'message':message,
+        'event_id':event_id,
     }
     subject_to_guest = render_to_string('tramino/mail_template/event_apply/subject_to_guest.txt', context)
     message_to_guest = render_to_string('tramino/mail_template/event_apply/message_to_guest.txt', context)
     user.email_user(subject_to_guest, message_to_guest)
 
     # --- process for host user ---    
-    event_id = request.POST['matchid']
     event = EventPostPool.objects.get(id=event_id)
     host_user = event.event_host_team.user
     context = {
@@ -60,10 +62,13 @@ def send_mail_when_event_applied(request):# model_form_save.pyのEventPostSave�
         'user': host_user,
         'event': event_object,
         'guest': guest_object,
+        'message':message,
+        'event_id':event_id,
     }
     subject_to_host = render_to_string('tramino/mail_template/event_apply/subject_to_host.txt', context)
     message_to_host = render_to_string('tramino/mail_template/event_apply/message_to_host.txt', context)
     host_user.email_user(subject_to_host, message_to_host)
+    print("log2-5")
 
     return
 
