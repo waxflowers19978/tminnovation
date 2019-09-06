@@ -411,6 +411,10 @@ def school_list(request):
 
     school_name = request.GET.get(key="school_name", default='None')
 
+    if school_name == '':
+        ret = {"data": ['']}
+        return JsonResponse(ret)
+
     school_list = get_school_list(school_name)
 
     ret = {"data": school_list}

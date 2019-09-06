@@ -2,6 +2,7 @@ import os
 import json
 
 def get_school_list(school_name):
+
     main_path = os.getcwd()
     h_s_path = '/tramino/school_list/high_school_list.json'
     j_h_s_path = '/tramino/school_list/junior_high_school_list.json'
@@ -41,5 +42,5 @@ def get_school_info(confirm_school_name):
         'city_name': city_name,
         'school_attribute': school_attribute,
     }
-    print(school_attribute)
+
     return school_info
