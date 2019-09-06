@@ -25,6 +25,7 @@ from .python_file.schedule_process import *
 from .python_file.model_to_dict import *
 from .python_file.email_process import *
 from .python_file.views_params_generator import *
+from .python_file.school_list import *
 
 
 """ 08/10以降追加 """
@@ -410,24 +411,23 @@ def school_list(request):
 
     school_name = request.GET.get(key="school_name", default='None')
 
-    main_path = os.getcwd()
-    h_s_path = '/tramino/school_list/high_school_list.json'
-    f = open(main_path + h_s_path, 'r')
-    h_s_list = json.load(f)
-    f.close()
-    h_s_list = [school for school in h_s_list if school_name in school]
-
-    j_h_s_path = '/tramino/school_list/junior_high_school_list.json'
-    f = open(main_path + j_h_s_path, 'r')
-    j_h_s_list = json.load(f)
-    f.close()
-    j_h_s_list = [school for school in j_h_s_list if school_name in school]
-
-    school_list = h_s_list + j_h_s_list
-    # school_list = h_s_list
+    school_list = get_school_list(school_name)
 
     ret = {"data": school_list}
+
     return JsonResponse(ret)
+
+def school_info(request):
+    if request.method == "POST":
+        confirm_school_name = request.POST['confirm_school_name']
+
+    school_info = get_school_info(confirm_school_name)
+    school_info = json.dumps(school_info)
+    ret = {"data": school_info}
+    return JsonResponse(ret)
+
+
+
 
 def done(request):
     username = request.user.username
@@ -437,7 +437,7 @@ def done(request):
             if posted_team_name == '':
                 message = 'チームがありません。対戦相手の募集にはチームの登録が必要です。'
                 params = {'message': message}
-                return render(request, 'tramino/done.html', params)            
+                return render(request, 'tramino/done.html', params)
             message = EventPostSave(request,posted_team_name)
 
         params = {
