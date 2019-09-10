@@ -17,7 +17,7 @@ var vm_search = new Vue({
       )
 
         .then(response=>{
-          console.log("axiosGetData:",response.data)
+          // console.log("axiosGetData:",response.data)
           this.school_list = response.data['data']
         })
         .catch(err=>{
@@ -40,7 +40,7 @@ var vm_search = new Vue({
           this.school_attribute = school_info['school_attribute']
           this.prefectures_name = school_info['prefectures_name']
           this.city_name = school_info['city_name']
-          console.log(school_info);
+          // console.log(school_info);
         })
         .catch(err=>{
           console.log("axiosGetErr",err)
@@ -68,6 +68,21 @@ var vm_form = new Vue({
     },
     city_name_f: function () {
       return vm_search.city_name
+    },
+    create_team: function () {
+      console.log('aiueo');
+      axios.get(
+        `/tramino/school_list`
+      )
+
+        .then(response=>{
+        })
+        .catch(err=>{
+          console.log("axiosGetErr",err)
+        })
+      window.location.href = '/tramino/save_school_info'
+
+
     },
   }
 })

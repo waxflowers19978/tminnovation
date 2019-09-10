@@ -40,7 +40,10 @@
       {{ form.achievement.label }}:{{ form.achievement }}<br>
       {{ form.number_of_members.label }}:{{ form.number_of_members }}<br>
       {{ form.commander_name.label }}:{{ form.commander_name }}<br>
+
     </form>
+    <button v-on:click="create_team">Add 1</button>
+
   </section>
 {% endblock %}
 

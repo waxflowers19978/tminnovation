@@ -407,6 +407,9 @@ def create(request):
     }
     return render(request, 'tramino/create.html', params)
 
+def save_school_info(request):
+    return HttpResponse('aiueo')
+
 def school_list(request):
 
     school_name = request.GET.get(key="school_name", default='None')
