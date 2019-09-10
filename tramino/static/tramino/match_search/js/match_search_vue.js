@@ -46,10 +46,11 @@ var vm = new Vue({
   created: function () {
     var dt = new Date();
     var y = dt.getFullYear();
-    var m = ("00" + (dt.getMonth()+1)).slice(-2);
+    var m1 = ("00" + (dt.getMonth()+1)).slice(-2);
+    var m2 = ("00" + (dt.getMonth()+2)).slice(-2);
     var d = ("00" + dt.getDate()).slice(-2);
-    var date1 = y + "-" + m + "-" + d;
-    var date2 = y + "-" + m + "-" + d;
+    var date1 = y + "-" + m1 + "-" + d;
+    var date2 = y + "-" + m2 + "-" + d;
     this.date1 = date1;
     this.date2 = date2;
 
