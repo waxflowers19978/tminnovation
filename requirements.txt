@@ -17,6 +17,6 @@ lxml==4.1.1
 html5lib
 pandas-datareader==0.6.0
 django-widget-tweaks==1.4.3
-Pillow==5.4.1
+Pillow==8.1.1
 django-cleanup==4.0.0   
 django-imagekit==4.0.2
